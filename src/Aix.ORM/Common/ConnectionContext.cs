@@ -5,47 +5,25 @@ using System.Threading;
 
 namespace Aix.ORM.Common
 {
-    public class ORMAppContextOld
+
+    public class ConnectionContext : CallContext<ConnectionContext, ConnectionManager>
     {
-        #region 上下文级别的
 
-        private const string _localContextName = "ORMAppContext.ConnectionContext";
-
-        public static HybridDictionary ConnectionContext
-        {
-            get
-            {
-                HybridDictionary ctx = CallContext.GetData(_localContextName) as HybridDictionary;
-                if (ctx == null)
-                {
-                    ctx = new HybridDictionary();
-                    CallContext.SetData(_localContextName, ctx);
-                }
-                return ctx;
-            }
-        }
-
-
-        #endregion
     }
-
     public interface IConnectionContext
     {
+        void OpenNewConnectionContext();
         bool Contains(string key);
-        void Add(string key, ConnectionManager value);
+        void Set(string key, ConnectionManager value);
 
         ConnectionManager Get(string key);
 
         void Remove(string key);
-
-        void OpenNewConnectionContext();
     }
 
-    public class ConnectionContext : IConnectionContext
+    public class ConnectionContextOld : IConnectionContext
     {
-        public static IConnectionContext Instance = new ConnectionContext();
-
-        #region 上下文级别的
+        public static IConnectionContext Instance = new ConnectionContextOld();
 
         private static AsyncLocal<ConcurrentDictionary<string, ConnectionManager>> AsyncLocalData =
             new AsyncLocal<ConcurrentDictionary<string, ConnectionManager>> { Value = new ConcurrentDictionary<string, ConnectionManager>() };
@@ -65,7 +43,7 @@ namespace Aix.ORM.Common
             return GetData().ContainsKey(key);
         }
 
-        public void Add(string key, ConnectionManager value)
+        public void Set(string key, ConnectionManager value)
         {
             GetData().AddOrUpdate(key, value, (k, v) => value);
         }
@@ -84,6 +62,5 @@ namespace Aix.ORM.Common
             GetData().TryRemove(key, out ConnectionManager value);
         }
 
-        #endregion
     }
 }

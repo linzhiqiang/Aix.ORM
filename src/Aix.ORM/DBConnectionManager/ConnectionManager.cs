@@ -52,7 +52,7 @@ namespace Aix.ORM.DBConnectionManager
                     {
                         //Console.WriteLine("获取新连接");
                         mgr = new ConnectionManager(connectionString);
-                        ConnectionContext.Instance.Add(connectionString, mgr);
+                        ConnectionContext.Instance.Set(connectionString, mgr);
                     }
                 }
             mgr = ConnectionContext.Instance.Get(connectionString);

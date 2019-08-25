@@ -16,39 +16,63 @@ namespace Aix.ORM.Common
     /// 往下传递是 只是复制引用对象和参数一样
     /// https://www.liujiajia.me/2019/07/29/asynclocal/
     /// </summary>
-    internal static class CallContext
-    {
-        static AsyncLocal<ConcurrentDictionary<string, object>> _asyncLocal = new AsyncLocal<ConcurrentDictionary<string, object>>();
+    /// 
 
-        public static ConcurrentDictionary<string, object> _context
+    public interface ICallContext<T>
+    {
+        void OpenNewContext();
+        bool Contains(string key);
+        void Set(string key, T value);
+
+        T Get(string key);
+
+        void Remove(string key);
+        
+    }
+
+    public class CallContext<Child, T>:ICallContext<T>  where Child : ICallContext<T>, new()
+    {
+        public static ICallContext<T> Instance = new Child();
+
+        static AsyncLocal<ConcurrentDictionary<string, T>> _asyncLocal = new AsyncLocal<ConcurrentDictionary<string, T>>();
+
+        public ConcurrentDictionary<string, T> _context
         {
             get
             {
-                if (_asyncLocal.Value == null) _asyncLocal.Value = new ConcurrentDictionary<string, object>();
+                if (_asyncLocal.Value == null) _asyncLocal.Value = new ConcurrentDictionary<string, T>();
                 return _asyncLocal.Value;
             }
         }
 
-        public static void SetData(string name, object value)
+        public void OpenNewContext()
         {
-            _context.AddOrUpdate(name, value, (k, v) => value);
+            _asyncLocal.Value = new ConcurrentDictionary<string, T>();
         }
 
-        public static object GetData(string name)
+        public bool Contains(string key)
         {
-            if (_context.TryGetValue(name, out object value))
+            return _context.ContainsKey(key);
+        }
+
+        public void Set(string key, T value)
+        {
+            _context.AddOrUpdate(key, value, (k, v) => value);
+        }
+
+        public T Get(string key)
+        {
+            if (_context.TryGetValue(key, out T value))
             {
                 return value;
             }
-            return null;
+            return default(T);
         }
 
-        public static void FreeNamedDataSlot(string name)
+        public void Remove(string key)
         {
-            _context.TryRemove(name, out object value);
+            _context.TryRemove(key, out T value);
         }
-
-
 
     }
 

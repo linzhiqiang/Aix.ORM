@@ -45,7 +45,7 @@ namespace Aix.ORM.Repository
         /// </summary>
         public void OpenNewContext()
         {
-            ConnectionContext.Instance.OpenNewConnectionContext();
+            ConnectionContext.Instance.OpenNewContext();
         }
 
         /// <summary>
