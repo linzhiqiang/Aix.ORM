@@ -8,6 +8,7 @@ namespace Aix.ORMSample
     {
         static void Main(string[] args)
         {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             var host = new HostBuilder()
                  .ConfigureHostConfiguration(builder =>
                  {

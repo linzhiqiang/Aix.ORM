@@ -39,7 +39,7 @@ namespace Aix.ORM.SQLBuilder
                 {
                     sqlbuilder.Append(",");
                 }
-                sqlbuilder.Append("@" + meta.Columns[i].ColumnName + "");
+                sqlbuilder.Append("@" + meta.Columns[i].PropertyName + "");
                 j++;
             }
             sqlbuilder.Append(");");
@@ -78,7 +78,7 @@ namespace Aix.ORM.SQLBuilder
                 {
                     sqlbuilder.Append(",");
                 }
-                sqlbuilder.Append("@" + meta.Columns[i].ColumnName + "");
+                sqlbuilder.Append("@" + meta.Columns[i].PropertyName + "");
                 j++;
             }
             sqlbuilder.Append(");");
@@ -114,7 +114,7 @@ namespace Aix.ORM.SQLBuilder
                         sqlbuilder.Append(",");
                     }
                     j++;
-                    sqlbuilder.Append("`" + meta.Columns[i].ColumnName + "`=@" + meta.Columns[i].ColumnName + "");
+                    sqlbuilder.Append("`" + meta.Columns[i].ColumnName + "`=@" + meta.Columns[i].PropertyName + "");
                 }
             }
             sqlbuilder.Append(" WHERE ");
@@ -124,7 +124,7 @@ namespace Aix.ORM.SQLBuilder
                 {
                     sqlbuilder.Append(" AND ");
                 }
-                sqlbuilder.Append("`" + keys[i].ColumnName + "`=@" + keys[i].ColumnName);
+                sqlbuilder.Append("`" + keys[i].ColumnName + "`=@" + keys[i].PropertyName);
             }
 
             return sqlbuilder.ToString();
@@ -161,7 +161,7 @@ namespace Aix.ORM.SQLBuilder
                 {
                     sqlbuilder.Append(",");
                 }
-                sqlbuilder.Append("@" + meta.Columns[i].ColumnName + "");
+                sqlbuilder.Append("@" + meta.Columns[i].PropertyName + "");
                 j++;
             }
             sqlbuilder.Append(");");
@@ -197,7 +197,7 @@ namespace Aix.ORM.SQLBuilder
                         sqlbuilder.Append(",");
                     }
                     j++;
-                    sqlbuilder.Append("`" + meta.Columns[i].ColumnName + "`=@" + meta.Columns[i].ColumnName + "");
+                    sqlbuilder.Append("`" + meta.Columns[i].ColumnName + "`=@" + meta.Columns[i].PropertyName + "");
                 }
             }
             sqlbuilder.Append(" WHERE ");
@@ -207,7 +207,7 @@ namespace Aix.ORM.SQLBuilder
                 {
                     sqlbuilder.Append(" AND ");
                 }
-                sqlbuilder.Append("`" + keys[i].ColumnName + "`=@" + keys[i].ColumnName);
+                sqlbuilder.Append("`" + keys[i].ColumnName + "`=@" + keys[i].PropertyName);
             }
 
             return sqlbuilder.ToString();
@@ -231,7 +231,7 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" WHERE 1=1 ");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND `{0}`=@{0}", item.ColumnName);
+                    sqlbuilder.AppendFormat(" AND `{0}`=@{0}", item.PropertyName);
                 }
             }
 
@@ -251,7 +251,7 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" 1=1");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND `{0}`=@{0}", item.ColumnName);
+                    sqlbuilder.AppendFormat(" AND `{0}`=@{0}", item.PropertyName);
                 }
             }
 

@@ -39,7 +39,7 @@ namespace Aix.ORM
                 if (attr != null)
                 {
                     EntityColumnMeta ecmeta = new EntityColumnMeta();
-                    //ecmeta.ColumnName = p.Name;
+                    ecmeta.PropertyName = p.Name;
                     ecmeta.ColumnName = attr.ColumnName;
                     ecmeta.Identity = Attribute.GetCustomAttribute(p, typeof(IdentityAttribute)) != null;
                     ecmeta.PrimaryKey = Attribute.GetCustomAttribute(p, typeof(PrimaryKeyAttribute)) != null;
@@ -82,6 +82,7 @@ namespace Aix.ORM
 
     public class EntityColumnMeta
     {
+        public string PropertyName { get; set; }
         public string ColumnName { get; set; }
 
         public bool PrimaryKey { get; set; }

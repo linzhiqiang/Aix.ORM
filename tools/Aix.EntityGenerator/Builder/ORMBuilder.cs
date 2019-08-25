@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Aix.EntityGenerator.Builder
 {
-   public class ORMBuilder : BaseEntityBuilder
+    public class ORMBuilder : BaseEntityBuilder
     {
         protected override string BuildClass(TableInfo table)
         {
@@ -49,7 +49,7 @@ namespace Aix.EntityGenerator.Builder
                 sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
 
-                
+
 
                 sb.AppendFormat("{0}[Column(\"{1}\")]", BuilderUtils.BuildSpace(space + 4), item.ColumnName);
                 sb.AppendLine();
@@ -67,16 +67,16 @@ namespace Aix.EntityGenerator.Builder
 
 
                 string dateType = DataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
-                sb.AppendFormat("{0}public {1} {2}", BuilderUtils.BuildSpace(space + 4), dateType, item.ColumnName);
+                sb.AppendFormat("{0}public {1} {2}", BuilderUtils.BuildSpace(space + 4), dateType, GetPropertyName(item.ColumnName));
                 sb.AppendLine();
 
                 sb.AppendFormat("{0}{{", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
 
-                sb.AppendFormat("{0}get {{ return {1}; }}", BuilderUtils.BuildSpace(space + 8),GetFieldName(item.ColumnName));
+                sb.AppendFormat("{0}get {{ return {1}; }}", BuilderUtils.BuildSpace(space + 8), GetFieldName(item.ColumnName));
                 sb.AppendLine();
-                sb.AppendFormat("{0}set {{ {1} = value; OnPropertyChanged(\"{2}\"); }}", 
-                    BuilderUtils.BuildSpace(space + 8), GetFieldName(item.ColumnName),item.ColumnName);
+                sb.AppendFormat("{0}set {{ {1} = value; OnPropertyChanged(\"{2}\"); }}",
+                    BuilderUtils.BuildSpace(space + 8), GetFieldName(item.ColumnName), item.ColumnName);
                 sb.AppendLine();
 
 
@@ -90,11 +90,13 @@ namespace Aix.EntityGenerator.Builder
             return sb.ToString();
         }
 
-        private string GetFieldName(string propName)
+        private string GetFieldName(string columnName)
         {
-            return string.Format("_{0}", char.ToLower(propName[0]) + propName.Substring(1));
+            return string.Format("_{0}", char.ToLower(columnName[0]) + columnName.Substring(1));
         }
 
-        
+       
+
+       
     }
 }

@@ -41,7 +41,7 @@ namespace Aix.EntityGenerator.Builder
                 sb.AppendLine();
 
                 string dateType = DataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
-                sb.AppendFormat("{0}public {1} {2} {{ get; set; }}", BuilderUtils.BuildSpace(space + 4), dateType, item.ColumnName);
+                sb.AppendFormat("{0}public {1} {2} {{ get; set; }}", BuilderUtils.BuildSpace(space + 4), dateType, GetPropertyName(item.ColumnName));
                 sb.AppendLine();
             }
 

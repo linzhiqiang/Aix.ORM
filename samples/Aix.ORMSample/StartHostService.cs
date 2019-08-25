@@ -20,14 +20,14 @@ namespace Aix.ORMSample
         {
             Task.Run(async () =>
             {
-               // await WithException(TestInsert);
+               //await WithException(TestInsert);
                 // await WithException(Test);
                 await WithException(AService);
 
-                for (int i = 0; i < 100; i++)
-                {
-                    WithException(AService);
-                }
+                //for (int i = 0; i < 100; i++)
+                //{
+                //    WithException(AService);
+                //}
                // await TestUpdate();
             });
 
@@ -71,10 +71,12 @@ namespace Aix.ORMSample
             {
                 var list = await _userRepository.QueryAsync();
 
-                var user = new UserInfo { UserId = 1, Status = 3 };
+                var user = new UserInfo { UserId = 1, Status = null,UpdateTime = DateTime.Now };
                 await _userRepository.UpdateAsync(user);
                 Test();
 
+                user = new UserInfo { UserId = 1, Status = 33, UpdateTime = DateTime.Now };
+                await _userRepository.UpdateAsync(user);
                 scope.Commit();
             }
         }

@@ -16,7 +16,11 @@ namespace Aix.ORMSample.Repository
 
         public Task<List<UserInfo>> QueryAsync()
         {
-            string sql = "select *from UserInfo";
+            string sql = @"select [user_id]
+      ,[user_name]
+      ,[Status]
+      ,[CreateTime]
+      ,[UpdateTime] from user_info";
             return base.QueryAsync<UserInfo>(sql, null);
         }
     }

@@ -21,9 +21,18 @@ namespace Aix.ORM.Repository
 
         private string ConnectionStrings { get; set; }
 
-        public IDBTransScope BeginTransScope()
+        /// <summary>
+        /// 开启一个事务，
+        /// using(var transScope=BeginTransScope())
+        /// {...;
+        /// transScope.Commit();
+        /// }
+        /// </summary>
+        /// <param name="scopeOption"></param>
+        /// <returns></returns>
+        public IDBTransScope BeginTransScope(TransScopeOption scopeOption= TransScopeOption.Required)
         {
-            return new DBTransScope(ConnectionStrings);
+            return new DBTransScope(ConnectionStrings, scopeOption);
         }
 
         //public void Commit(IDBTransScope transScope)

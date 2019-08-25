@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-08-25 19:14:16。
+生成时间：2019-08-25 21:17:53。
 */
 using System;
 using System.Collections.Generic;
@@ -13,11 +13,11 @@ namespace Aix.ORMSample.Entity
     /// <summary>
     /// 
     /// <summary>
-    [Table("UserInfo")]
+    [Table("user_info")]
     public partial class UserInfo : BaseEntity
     {
-        private int _userId; 
-        private string _userName; 
+        private int _user_id; 
+        private string _user_name; 
         private int? _status; 
         private DateTime _createTime; 
         private DateTime _updateTime; 
@@ -25,22 +25,22 @@ namespace Aix.ORMSample.Entity
         /// <summary>
         /// 
         /// <summary>
-        [Column("UserId")]
+        [Column("user_id")]
         [PrimaryKey]
         [Identity]
         public int UserId
         {
-            get { return _userId; }
-            set { _userId = value; OnPropertyChanged("UserId"); }
+            get { return _user_id; }
+            set { _user_id = value; OnPropertyChanged("user_id"); }
         }
         /// <summary>
         /// 
         /// <summary>
-        [Column("UserName")]
+        [Column("user_name")]
         public string UserName
         {
-            get { return _userName; }
-            set { _userName = value; OnPropertyChanged("UserName"); }
+            get { return _user_name; }
+            set { _user_name = value; OnPropertyChanged("user_name"); }
         }
         /// <summary>
         /// 

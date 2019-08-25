@@ -28,7 +28,6 @@ namespace Aix.EntityGeneratorApp
 
         static void Start()
         {
-            //ORMConfig.Instance.SetORMDBType(ORMDBType.SqlServer);
             string namesapce = GeneratorOption.Instance.NameSapce;
             if (string.IsNullOrEmpty(namesapce))
             {
@@ -41,24 +40,26 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine("1：基本实体");
                 Console.WriteLine("2：ORM实体");
                 string type = Console.ReadLine();
-                Console.WriteLine("开始生成......");
+
+                IEntityBuilder builder = null;
                 if (type == "1")
                 {
-                    IEntityBuilder builder = new DefaultBuilder();
-                    WithException(() =>
-                    {
-                        builder.Builder(namesapce);
-                    });
+                    builder = new DefaultBuilder();
                 }
-
-                if (type == "2")
+                else if (type == "2")
                 {
-                    IEntityBuilder builder = new ORMBuilder();
-                    WithException(() =>
-                    {
-                        builder.Builder(namesapce);
-                    });
+                    builder = new ORMBuilder();
                 }
+                else
+                {
+                    Console.WriteLine("怎么选择了一个空的操作呢");
+                    continue;
+                }
+                Console.WriteLine("开始生成......");
+                WithException(() =>
+                {
+                    builder.Builder(namesapce);
+                });
                 Console.WriteLine();
                 Console.WriteLine("生成成功......");
 
