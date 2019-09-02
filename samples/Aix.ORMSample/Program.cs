@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Aix.ORM.DBConnectionManager;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 
 namespace Aix.ORMSample
 {
@@ -8,7 +11,7 @@ namespace Aix.ORMSample
     {
         static void Main(string[] args)
         {
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            
             var host = new HostBuilder()
                  .ConfigureHostConfiguration(builder =>
                  {
@@ -29,6 +32,14 @@ namespace Aix.ORMSample
 
             host.RunConsoleAsync().Wait();
             Console.WriteLine("服务已退出");
+        }
+    }
+
+    public class MySqlConnectionFactory : IConnectionFactory
+    {
+        public IDbConnection CreateConnection(string connectionString)
+        {
+            return new MySqlConnection(connectionString);
         }
     }
 }

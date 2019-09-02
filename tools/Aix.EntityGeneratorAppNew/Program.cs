@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Aix.ORM.DBConnectionManager;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 
 namespace Aix.EntityGeneratorApp
 {
@@ -29,5 +32,7 @@ namespace Aix.EntityGeneratorApp
             host.RunConsoleAsync().Wait();
             Console.WriteLine("服务已退出");
         }
+
+       
     }
 }

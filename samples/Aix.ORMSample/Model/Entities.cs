@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-08-25 21:17:53。
+生成时间：2019-09-02 14:44:40。
 */
 using System;
 using System.Collections.Generic;
@@ -18,9 +18,10 @@ namespace Aix.ORMSample.Entity
     {
         private int _user_id; 
         private string _user_name; 
-        private int? _status; 
-        private DateTime _createTime; 
-        private DateTime _updateTime; 
+        private bool _status; 
+        private sbyte _type; 
+        private DateTime _create_time; 
+        private DateTime _update_time; 
 
         /// <summary>
         /// 
@@ -45,29 +46,38 @@ namespace Aix.ORMSample.Entity
         /// <summary>
         /// 
         /// <summary>
-        [Column("Status")]
-        public int? Status
+        [Column("status")]
+        public bool Status
         {
             get { return _status; }
-            set { _status = value; OnPropertyChanged("Status"); }
+            set { _status = value; OnPropertyChanged("status"); }
         }
         /// <summary>
         /// 
         /// <summary>
-        [Column("CreateTime")]
+        [Column("type")]
+        public sbyte Type
+        {
+            get { return _type; }
+            set { _type = value; OnPropertyChanged("type"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("create_time")]
         public DateTime CreateTime
         {
-            get { return _createTime; }
-            set { _createTime = value; OnPropertyChanged("CreateTime"); }
+            get { return _create_time; }
+            set { _create_time = value; OnPropertyChanged("create_time"); }
         }
         /// <summary>
         /// 
         /// <summary>
-        [Column("UpdateTime")]
+        [Column("update_time")]
         public DateTime UpdateTime
         {
-            get { return _updateTime; }
-            set { _updateTime = value; OnPropertyChanged("UpdateTime"); }
+            get { return _update_time; }
+            set { _update_time = value; OnPropertyChanged("update_time"); }
         }
     }
 

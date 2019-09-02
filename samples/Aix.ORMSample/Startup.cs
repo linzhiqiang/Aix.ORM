@@ -14,8 +14,23 @@ namespace Aix.ORMSample
         {
             var dbOption = context.Configuration.GetSection("connectionStrings").Get<DBOption>();
             services.AddSingleton(dbOption);
+            AddDB(services);
             services.AddSingleton< UserRepository>();
             services.AddHostedService<StartHostService>();
         }
+
+        private static void AddDB(IServiceCollection services)
+        {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            // ConnectionFactory.Instance.DefaultFactory = new MySqlConnectionFactory();
+        }
     }
+
+    //public class MySqlConnectionFactory :IConnectionFactory
+    //{
+    //    public IDbConnection CreateConnection(string connectionString)
+    //    {
+    //        return new MySqlConnection(connectionString);
+    //    }
+    //}
 }

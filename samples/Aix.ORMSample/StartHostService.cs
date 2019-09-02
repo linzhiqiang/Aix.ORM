@@ -20,15 +20,16 @@ namespace Aix.ORMSample
         {
             Task.Run(async () =>
             {
-               //await WithException(TestInsert);
+                //await WithException(TestInsert);
                 // await WithException(Test);
-                await WithException(AService);
+                await PageQuery();
+                await WithException(TestTrans);
 
                 //for (int i = 0; i < 100; i++)
                 //{
                 //    WithException(AService);
                 //}
-               // await TestUpdate();
+                // await TestUpdate();
             });
 
 
@@ -46,7 +47,8 @@ namespace Aix.ORMSample
             var user = new UserInfo
             {
                 UserName = "林志强",
-                Status = 1,
+                Status = true,
+                 Type=1,
                 CreateTime = DateTime.Now,
                 UpdateTime = DateTime.Now
             };
@@ -59,31 +61,36 @@ namespace Aix.ORMSample
 
         }
 
+        async Task PageQuery()
+        {
+          var users= await  _userRepository.PageQuery(new ORM.Common.PageView {  PageIndex=0, PageSize=5});
+        }
+
         async Task TestUpdate()
         {
-            var user = new UserInfo {  UserId=1, Status=2};
+            var user = new UserInfo { UserId = 2, Status = true };
             await _userRepository.UpdateAsync(user);
         }
 
-        async Task AService()
+        async Task TestTrans()
         {
             using (var scope = _userRepository.BeginTransScope())
             {
                 var list = await _userRepository.QueryAsync();
 
-                var user = new UserInfo { UserId = 1, Status = null,UpdateTime = DateTime.Now };
+                var user = new UserInfo { UserId = 2, Status = true, UpdateTime = DateTime.Now };
                 await _userRepository.UpdateAsync(user);
-                Test();
+                AsyncNewContext();
 
-                user = new UserInfo { UserId = 1, Status = 33, UpdateTime = DateTime.Now };
+                user = new UserInfo { UserId = 2, Status = false, UpdateTime = DateTime.Now };
                 await _userRepository.UpdateAsync(user);
                 scope.Commit();
             }
         }
-        async Task Test()
+        async Task AsyncNewContext()
         {
             _userRepository.OpenNewContext();
-           // await Task.Delay(2000);
+            // await Task.Delay(2000);
             var list = await _userRepository.QueryAsync();
         }
 
