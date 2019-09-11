@@ -11,7 +11,7 @@ namespace Aix.ORMSample
     {
         static void Main(string[] args)
         {
-            
+            System.Threading.ThreadPool.SetMinThreads(100, 100);
             var host = new HostBuilder()
                  .ConfigureHostConfiguration(builder =>
                  {
@@ -35,11 +35,5 @@ namespace Aix.ORMSample
         }
     }
 
-    public class MySqlConnectionFactory : IConnectionFactory
-    {
-        public IDbConnection CreateConnection(string connectionString)
-        {
-            return new MySqlConnection(connectionString);
-        }
-    }
+ 
 }

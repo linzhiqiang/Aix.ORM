@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-09-02 14:44:40。
+生成时间：2019-09-10 14:09:24。
 */
 using System;
 using System.Collections.Generic;
@@ -13,15 +13,44 @@ namespace Aix.ORMSample.Entity
     /// <summary>
     /// 
     /// <summary>
+    [Table("Table_1")]
+    public partial class Table1 : BaseEntity
+    {
+        private int _id;
+        private short _test;
+
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("Id")]
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; OnPropertyChanged("Id"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("Test")]
+        public short Test
+        {
+            get { return _test; }
+            set { _test = value; OnPropertyChanged("Test"); }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// <summary>
     [Table("user_info")]
     public partial class UserInfo : BaseEntity
     {
-        private int _user_id; 
-        private string _user_name; 
-        private bool _status; 
-        private sbyte _type; 
-        private DateTime _create_time; 
-        private DateTime _update_time; 
+        private int _user_id;
+        private string _user_name;
+        private bool _status;
+        private byte _type;
+        private DateTime _create_time;
+        private DateTime _update_time;
 
         /// <summary>
         /// 
@@ -56,7 +85,7 @@ namespace Aix.ORMSample.Entity
         /// 
         /// <summary>
         [Column("type")]
-        public sbyte Type
+        public byte Type
         {
             get { return _type; }
             set { _type = value; OnPropertyChanged("type"); }

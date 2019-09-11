@@ -6,14 +6,14 @@ using System.Text;
 
 namespace Aix.ORM.SQLBuilder
 {
-     public class MsSqlSQLBuilder : ISQLBuilder
+    public class MsSqlSQLBuilder : ISQLBuilder
     {
         public string BuildReplaceInsertSQL(EntityMeta meta)
         {
             if (meta.Columns == null || meta.Columns.Count == 0)
                 return string.Empty;
             var keys = meta.Columns.FindAll(_ => _.PrimaryKey);
-            AssertUtils.IsTrue(keys.Count >0,$"表{meta.TableName} 不存在主键");
+            AssertUtils.IsTrue(keys.Count > 0, $"表{meta.TableName} 不存在主键");
             StringBuilder sqlbuilder = new StringBuilder();
             sqlbuilder.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM [{0}] WHERE ", meta.TableName);
             for (int i = 0; i < keys.Count; i++)
@@ -25,10 +25,10 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append("[" + keys[i].ColumnName + "]=@" + keys[i].PropertyName);
             }
             sqlbuilder.Append(" )");
-            sqlbuilder.AppendFormat(" BEGIN {0} END",BuildInsertSql(meta));
+            sqlbuilder.AppendFormat(" BEGIN {0} END", BuildInsertSql(meta));
 
             sqlbuilder.Append(" ELSE");
-            sqlbuilder.AppendFormat(" BEGIN {0} END",BuildUpdateSql(meta));
+            sqlbuilder.AppendFormat(" BEGIN {0} END", BuildUpdateSql(meta));
 
             return sqlbuilder.ToString();
 
@@ -220,7 +220,7 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" 1=1 ");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND [{0}]=@{0}", item.PropertyName);
+                    sqlbuilder.AppendFormat(" AND [{0}]=@{1}", item.ColumnName, item.PropertyName);
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" 1=1");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND [{0}]=@{0}", item.PropertyName);
+                    sqlbuilder.AppendFormat(" AND [{0}]=@{1}", item.ColumnName, item.PropertyName);
                 }
             }
 

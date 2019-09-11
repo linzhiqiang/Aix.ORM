@@ -20,10 +20,11 @@ namespace Aix.ORMSample
         {
             Task.Run(async () =>
             {
-                //await WithException(TestInsert);
-                // await WithException(Test);
-                await PageQuery();
-                await WithException(TestTrans);
+                //  await WithException(TestInsert);
+                await WithException(TestDelete);
+                // await WithException(TestUpdate);
+                WithException(PageQuery);
+                // await WithException(TestTrans);
 
                 //for (int i = 0; i < 100; i++)
                 //{
@@ -48,7 +49,7 @@ namespace Aix.ORMSample
             {
                 UserName = "林志强",
                 Status = true,
-                 Type=1,
+                Type = 1,
                 CreateTime = DateTime.Now,
                 UpdateTime = DateTime.Now
             };
@@ -61,9 +62,10 @@ namespace Aix.ORMSample
 
         }
 
-        async Task PageQuery()
+        async Task TestDelete()
         {
-          var users= await  _userRepository.PageQuery(new ORM.Common.PageView {  PageIndex=0, PageSize=5});
+            var user = new UserInfo { UserId = 15 };
+            await _userRepository.DeleteAsync(user);
         }
 
         async Task TestUpdate()
@@ -71,6 +73,14 @@ namespace Aix.ORMSample
             var user = new UserInfo { UserId = 2, Status = true };
             await _userRepository.UpdateAsync(user);
         }
+        async Task PageQuery()
+        {
+
+            var users = await _userRepository.PageQuery(new ORM.Common.PageView { PageIndex = 0, PageSize = 5 });
+            var userInfo = await _userRepository.GetByPkAsync<UserInfo>(new UserInfo { UserId = 15 });
+        }
+
+
 
         async Task TestTrans()
         {
