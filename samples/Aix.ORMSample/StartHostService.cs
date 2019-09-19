@@ -21,7 +21,7 @@ namespace Aix.ORMSample
             Task.Run(async () =>
             {
                 //  await WithException(TestInsert);
-                await WithException(TestDelete);
+               // await WithException(TestDelete);
                 // await WithException(TestUpdate);
                 WithException(PageQuery);
                 // await WithException(TestTrans);
