@@ -19,14 +19,15 @@ namespace Aix.ORMSample
             services.AddSingleton(dbOption);
             AddDB(services);
             services.AddSingleton<UserRepository>();
+            services.AddSingleton<RelicRepository>();
             services.AddHostedService<StartHostService>();
         }
 
         private static void AddDB(IServiceCollection services)
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-           // ConnectionFactory.Instance.DefaultFactory = new MySqlConnectionFactory();
-            ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
+            ConnectionFactory.Instance.DefaultFactory = new MySqlConnectionFactory();
+           // ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
         }
     }
 

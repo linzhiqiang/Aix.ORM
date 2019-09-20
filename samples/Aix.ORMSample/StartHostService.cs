@@ -1,29 +1,35 @@
 ﻿using Aix.ORMSample.Entity;
 using Aix.ORMSample.Repository;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Aix.ORMSample
 {
     public class StartHostService : IHostedService
     {
+        private ILogger<StartHostService> _logger;
         private UserRepository _userRepository;
-        public StartHostService(UserRepository userRepository)
+        private RelicRepository _relicRepository;
+        public StartHostService(ILogger<StartHostService> logger, UserRepository userRepository, RelicRepository relicRepository)
         {
+            _logger = logger;
             _userRepository = userRepository;
+            _relicRepository = relicRepository;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
             {
-                //  await WithException(TestInsert);
-                await WithException(TestDelete);
+                // await WithException(TestInsert);
+                //await WithException(TestDelete);
                 // await WithException(TestUpdate);
-                WithException(PageQuery);
+                // WithException(PageQuery);
                 // await WithException(TestTrans);
 
                 //for (int i = 0; i < 100; i++)
@@ -31,6 +37,8 @@ namespace Aix.ORMSample
                 //    WithException(AService);
                 //}
                 // await TestUpdate();
+
+               // await WithException(ProcessImport);
             });
 
 
@@ -43,6 +51,70 @@ namespace Aix.ORMSample
             return Task.CompletedTask;
         }
 
+        async Task ProcessImport()
+        {
+            TempImport preItem = null;
+            var list = await _relicRepository.QueryAsync();
+            preItem = list.FirstOrDefault();
+            foreach (var item in list)
+            {
+                if (string.IsNullOrWhiteSpace(item.ProductId))
+                {
+                    item.ProductId = preItem.ProductId;
+                }
+                item.ProductId = item.ProductId.Replace(" ","");
+                item.ProductId = item.ProductId.Replace("\r", "");
+                item.ProductId = item.ProductId.Replace("\n", "");
+                preItem = item;
+            }
+
+            foreach (var item in list)
+            {
+                //await _relicRepository.UpdateAsync(item);
+            }
+
+            var saveList = new List<TempImportData>();
+
+            foreach (var item in list)
+            {
+                var productIds = Split(item.ProductId);
+                foreach (var pId in productIds)
+                {
+                    var temp = new TempImportData
+                    {
+                        RelicId = int.Parse(item.RelicId),
+                        ProductId = int.Parse(pId)
+                    };
+                    if (!saveList.Exists(x => x.RelicId == temp.RelicId && x.ProductId == temp.ProductId))
+                    {
+                        saveList.Add(temp);
+                    }
+                }
+            }
+
+            foreach (var item in saveList)
+            {
+                await _relicRepository.InsertAsync(item);
+            }
+
+        }
+
+        private List<string> Split(string msg)
+        {
+            var list = new List<string>();
+            var temp = "";
+            for (int i = 0; i < msg.Length; i++)
+            {
+                temp += msg[i];
+                if ((i + 1) % 7 == 0)
+                {
+                    list.Add(temp);
+                    temp = "";
+                }
+            }
+            return list;
+        }
+
         async Task TestInsert()
         {
             var user = new UserInfo
@@ -53,12 +125,17 @@ namespace Aix.ORMSample
                 CreateTime = DateTime.Now,
                 UpdateTime = DateTime.Now
             };
-            using (var scope = _userRepository.BeginTransScope())
+
+            for (int i = 0; i < 100 * 10000; i++)
             {
-                await _userRepository.InsertAsync(user);
-                await _userRepository.InsertAsync(user);
-                scope.Commit();
+                using (var scope = _userRepository.BeginTransScope())
+                {
+                    await _userRepository.InsertAsync(user);
+                    scope.Commit();
+                }
+                _logger.LogInformation($"新增：{i}");
             }
+
 
         }
 
