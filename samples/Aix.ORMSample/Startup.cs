@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Aix.ORMSample
@@ -28,6 +29,14 @@ namespace Aix.ORMSample
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             ConnectionFactory.Instance.DefaultFactory = new MySqlConnectionFactory();
            // ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
+        }
+    }
+
+    public class MsSqlConnectionFactory : IConnectionFactory
+    {
+        public IDbConnection CreateConnection(string connectionString)
+        {
+            return new SqlConnection(connectionString);
         }
     }
 

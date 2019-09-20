@@ -1,16 +1,10 @@
-﻿using Aix.ORM.Common;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
+﻿using System.Data;
 
 namespace Aix.ORM.DBConnectionManager
 {
     public class ConnectionFactory
     {
-        public IConnectionFactory DefaultFactory = new MsSqlConnectionFactory();
+        public IConnectionFactory DefaultFactory = null;// new MsSqlConnectionFactory();
 
         public static ConnectionFactory Instance = new ConnectionFactory();
 
@@ -28,13 +22,13 @@ namespace Aix.ORM.DBConnectionManager
         IDbConnection CreateConnection(string connectionString);
     }
 
-    public class MsSqlConnectionFactory : IConnectionFactory
-    {
-        public IDbConnection CreateConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
-    }
+    //public class MsSqlConnectionFactory : IConnectionFactory
+    //{
+    //    public IDbConnection CreateConnection(string connectionString)
+    //    {
+    //        return new SqlConnection(connectionString);
+    //    }
+    //}
 
 
 }
