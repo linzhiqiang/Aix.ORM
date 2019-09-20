@@ -1,6 +1,7 @@
 ﻿using Aix.ORM.DBConnectionManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -25,7 +26,8 @@ namespace Aix.ORMSample
                   })
                  .ConfigureLogging((context, factory) =>
                  {
-
+                     factory.AddConsole();
+                     factory.SetMinimumLevel(LogLevel.Trace);
                  })
                  .ConfigureServices(Startup.ConfigureServices);
 

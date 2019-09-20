@@ -10,4 +10,6 @@ namespace Aix.ORMSample.Entity
 
         public long ChildCount { get; set; }
     }
+
+
 }

@@ -13,6 +13,87 @@ namespace Aix.ORMSample.Entity
     /// <summary>
     /// 
     /// <summary>
+    [Table("temp_import_data")]
+    public partial class TempImportData : BaseEntity
+    {
+        private int _relic_id;
+        private int _product_id;
+
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("relic_id")]
+        [PrimaryKey]
+        public int RelicId
+        {
+            get { return _relic_id; }
+            set { _relic_id = value; OnPropertyChanged("relic_id"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("product_id")]
+        public int ProductId
+        {
+            get { return _product_id; }
+            set { _product_id = value; OnPropertyChanged("product_id"); }
+        }
+    }
+    /// <summary>
+    /// 
+    /// <summary>
+    [Table("temp_import")]
+    public partial class TempImport : BaseEntity
+    {
+        private int _id;
+        private string _relic_id;
+        private string _relic_name;
+        private string _product_id;
+
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("id")]
+        [PrimaryKey]
+        [Identity]
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; OnPropertyChanged("id"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("relic_id")]
+        public string RelicId
+        {
+            get { return _relic_id; }
+            set { _relic_id = value; OnPropertyChanged("relic_id"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("relic_name")]
+        public string RelicName
+        {
+            get { return _relic_name; }
+            set { _relic_name = value; OnPropertyChanged("relic_name"); }
+        }
+        /// <summary>
+        /// 
+        /// <summary>
+        [Column("product_id")]
+        public string ProductId
+        {
+            get { return _product_id; }
+            set { _product_id = value; OnPropertyChanged("product_id"); }
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// <summary>
     [Table("Table_1")]
     public partial class Table1 : BaseEntity
     {
