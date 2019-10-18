@@ -1,5 +1,6 @@
 ﻿using Aix.ORM.DBConnectionManager;
 using Aix.ORMSample.Repository;
+using Aix.ORMSample.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,9 @@ namespace Aix.ORMSample
             AddDB(services);
             services.AddSingleton<UserRepository>();
             services.AddSingleton<RelicRepository>();
+            services.AddSingleton<UserOpusRepository>();
+
+            services.AddSingleton<UserOpusService>();
             services.AddHostedService<StartHostService>();
         }
 

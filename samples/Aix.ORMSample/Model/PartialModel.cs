@@ -11,5 +11,10 @@ namespace Aix.ORMSample.Entity
         public long ChildCount { get; set; }
     }
 
+    public partial class UserOpus
+    { 
+    public int ErrorCount { get; set; }
+    }
+
 
 }

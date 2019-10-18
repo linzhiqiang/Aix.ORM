@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Aix.ORMSample.Service;
 
 namespace Aix.ORMSample
 {
@@ -16,21 +17,24 @@ namespace Aix.ORMSample
         private ILogger<StartHostService> _logger;
         private UserRepository _userRepository;
         private RelicRepository _relicRepository;
-        public StartHostService(ILogger<StartHostService> logger, UserRepository userRepository, RelicRepository relicRepository)
+        private UserOpusService _userOpusService;
+        public StartHostService(ILogger<StartHostService> logger, UserRepository userRepository, RelicRepository relicRepository
+            , UserOpusService userOpusService)
         {
             _logger = logger;
             _userRepository = userRepository;
             _relicRepository = relicRepository;
+            _userOpusService = userOpusService;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
             {
-
-           
+                //下载半边鱼的音频文件
+                //await WithException(_userOpusService.Load); 
 
                 //  await WithException(TestInsert);
-               // await WithException(TestDelete);
+                // await WithException(TestDelete);
 
                 // await WithException(TestUpdate);
                 // WithException(PageQuery);
@@ -42,7 +46,7 @@ namespace Aix.ORMSample
                 //}
                 // await TestUpdate();
 
-               // await WithException(ProcessImport);
+                // await WithException(ProcessImport);
             });
 
 
@@ -66,7 +70,7 @@ namespace Aix.ORMSample
                 {
                     item.ProductId = preItem.ProductId;
                 }
-                item.ProductId = item.ProductId.Replace(" ","");
+                item.ProductId = item.ProductId.Replace(" ", "");
                 item.ProductId = item.ProductId.Replace("\r", "");
                 item.ProductId = item.ProductId.Replace("\n", "");
                 preItem = item;

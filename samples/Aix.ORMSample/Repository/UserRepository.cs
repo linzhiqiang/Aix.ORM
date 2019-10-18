@@ -27,7 +27,6 @@ namespace Aix.ORMSample.Repository
 
         public async Task<PagedList<UserInfo>> PageQuery(PageView pageView)
         {
-            await Task.Delay(1000);
             var column = " user_id  , user_name   , status  , type , create_time, update_time ";
             var table = " user_info ";
 
