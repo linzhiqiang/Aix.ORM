@@ -8,7 +8,7 @@ namespace Aix.ORM
     public abstract class BaseEntity
     {
         private List<string> _PropertyChangedList = new List<string>();
-        private bool _fullUpdate = false;//默认更新全部
+        private bool _fullUpdate = false;//默认不更新全部
 
         public bool FullUpdate
         {

@@ -47,5 +47,13 @@ namespace Aix.ORM.SQLBuilder
         /// <param name="meta"></param>
         /// <returns></returns>
         string BuildReplaceInsertSQL(EntityMeta meta);
+
+        /// <summary>
+        /// 获取所有列 逗号分隔 mysql用``,sqlserver用[]
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="prefix">如A 最终sql语句就是A.Id，可为空</param>
+        /// <returns></returns>
+        string GetAllColumns(EntityMeta meta,string prefix);
     }
 }

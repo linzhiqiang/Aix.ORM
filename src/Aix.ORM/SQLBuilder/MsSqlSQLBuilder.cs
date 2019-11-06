@@ -246,5 +246,17 @@ namespace Aix.ORM.SQLBuilder
 
             return sqlbuilder.ToString();
         }
+
+        public string GetAllColumns(EntityMeta meta, string prefix)
+        {
+            prefix = prefix ?? "";
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                prefix = prefix + ".";
+            }
+            List<string> allColumns = meta.Columns.Select(x => $"{prefix}[{ x.ColumnName}]").ToList();
+            return " " + string.Join(",", allColumns) + " ";
+        }
+
     }
 }

@@ -22,6 +22,21 @@ namespace Aix.ORM.Repository
         private string ConnectionStrings { get; set; }
 
         /// <summary>
+        /// 获取所有列 逗号分隔 mysql用``,sqlserver用[]
+        /// </summary>
+        /// <param name="prefix">如A 最终sql语句就是A.Id，可为空</param>
+        /// <returns></returns>
+        public string GetAllColumns<T>(string prefix="")where T:BaseEntity
+        {
+            return SQLBuilderHelper.GetAllColumns(typeof(T), this.GetORMDBType(), prefix);
+        }
+
+        public string GetTableName<T>() where T : BaseEntity
+        {
+            return SQLBuilderHelper.GetTableName(typeof(T));
+        }
+
+        /// <summary>
         /// 开启一个事务，
         /// using(var transScope=BeginTransScope())
         /// {...;
@@ -30,7 +45,7 @@ namespace Aix.ORM.Repository
         /// </summary>
         /// <param name="scopeOption"></param>
         /// <returns></returns>
-        public IDBTransScope BeginTransScope(TransScopeOption scopeOption= TransScopeOption.Required)
+        public IDBTransScope BeginTransScope(TransScopeOption scopeOption = TransScopeOption.Required)
         {
             return new DBTransScope(ConnectionStrings, scopeOption);
         }
@@ -72,11 +87,8 @@ namespace Aix.ORM.Repository
         public int ReplaceInto(BaseEntity entity)
         {
             int ret = 0;
-            //using (ConnectionManager mgr = GetConnection())
-            {
-                string sql = SQLBuilderHelper.GetReplaceInsertSQL(entity, this.GetORMDBType());
-                ret = Excute(sql, entity);
-            }
+            string sql = SQLBuilderHelper.GetReplaceInsertSQL(entity, this.GetORMDBType());
+            ret = Excute(sql, entity);
             return ret;
         }
 

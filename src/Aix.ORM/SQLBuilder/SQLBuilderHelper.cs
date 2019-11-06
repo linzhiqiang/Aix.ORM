@@ -6,29 +6,30 @@ using System.Text;
 
 namespace Aix.ORM.SQLBuilder
 {
-   public static class SQLBuilderHelper
+    public static class SQLBuilderHelper
     {
         private static Dictionary<Type, string> _InsertSqlCache = new Dictionary<Type, string>();
         private static Dictionary<Type, string> _UpdateSqlCache = new Dictionary<Type, string>();
         private static Dictionary<Type, string> _GetByPkSqlCache = new Dictionary<Type, string>();
         private static Dictionary<Type, string> _DeleteByPkSqlCache = new Dictionary<Type, string>();
         private static Dictionary<Type, string> _ReplaceSqlCache = new Dictionary<Type, string>();
+        private static Dictionary<Type, string> _AllColumnsSqlCache = new Dictionary<Type, string>();
 
 
         public static string GetInsertSql(BaseEntity model, ORMDBType dbType)
         {
             if (model.FullUpdate)
             {
-                return GetInsertFullSql(model,dbType);
+                return GetInsertFullSql(model, dbType);
             }
-            return GetInsertChangeColumnsSql(model,dbType);
+            return GetInsertChangeColumnsSql(model, dbType);
         }
 
-        public static string GetUpdateSql(BaseEntity model, ORMDBType dbType) 
+        public static string GetUpdateSql(BaseEntity model, ORMDBType dbType)
         {
             if (model.FullUpdate)
             {
-                return GetUpdateFullSql(model,dbType);
+                return GetUpdateFullSql(model, dbType);
             }
             return GetUpdateChangeColumnsSql(model, dbType);
         }
@@ -85,6 +86,30 @@ namespace Aix.ORM.SQLBuilder
             return _ReplaceSqlCache[t];
         }
 
+        public static string GetAllColumns(Type entityType, ORMDBType dbType, string prefix)
+        {
+
+            Type t = entityType;
+            if (!_AllColumnsSqlCache.ContainsKey(t))
+            {
+                EntityMeta metadata = EntityReflect.GetDefineInfoFromType(t);
+                string sql = SQLBuilderFactory.Instance.GetSQLBuilder(dbType).GetAllColumns(metadata, prefix);
+                lock (_AllColumnsSqlCache)
+                {
+                    if (!_AllColumnsSqlCache.ContainsKey(t))
+                    {
+                        _AllColumnsSqlCache.Add(t, sql);
+                    }
+                }
+            }
+            return _AllColumnsSqlCache[t];
+        }
+
+        public static string GetTableName(Type entityType)
+        {
+            EntityMeta metadata = EntityReflect.GetDefineInfoFromType(entityType);
+            return metadata?.TableName;
+        }
         #region 私有方法
 
         private static string GetInsertFullSql(BaseEntity model, ORMDBType dbType)
@@ -112,7 +137,7 @@ namespace Aix.ORM.SQLBuilder
         }
 
 
-        private static string GetUpdateFullSql(BaseEntity model,ORMDBType dbType)
+        private static string GetUpdateFullSql(BaseEntity model, ORMDBType dbType)
         {
             Type type = model.GetType();
             if (!_UpdateSqlCache.ContainsKey(type))
