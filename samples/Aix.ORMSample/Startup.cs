@@ -25,6 +25,7 @@ namespace Aix.ORMSample
             services.AddSingleton<UserOpusRepository>();
 
             services.AddSingleton<UserOpusService>();
+            services.AddSingleton<RelicService>();
             services.AddHostedService<StartHostService>();
         }
 

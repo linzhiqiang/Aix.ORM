@@ -18,18 +18,21 @@ namespace Aix.ORMSample
         private UserRepository _userRepository;
         private RelicRepository _relicRepository;
         private UserOpusService _userOpusService;
+        RelicService _relicService;
         public StartHostService(ILogger<StartHostService> logger, UserRepository userRepository, RelicRepository relicRepository
-            , UserOpusService userOpusService)
+            , UserOpusService userOpusService, RelicService relicService)
         {
             _logger = logger;
             _userRepository = userRepository;
             _relicRepository = relicRepository;
             _userOpusService = userOpusService;
+            _relicService = relicService;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
             {
+                await WithException(_relicService.Load);
                 //下载半边鱼的音频文件
                 //await WithException(_userOpusService.Load); 
 
@@ -59,53 +62,53 @@ namespace Aix.ORMSample
             return Task.CompletedTask;
         }
 
-        async Task ProcessImport()
-        {
-            TempImport preItem = null;
-            var list = await _relicRepository.QueryAsync();
-            preItem = list.FirstOrDefault();
-            foreach (var item in list)
-            {
-                if (string.IsNullOrWhiteSpace(item.ProductId))
-                {
-                    item.ProductId = preItem.ProductId;
-                }
-                item.ProductId = item.ProductId.Replace(" ", "");
-                item.ProductId = item.ProductId.Replace("\r", "");
-                item.ProductId = item.ProductId.Replace("\n", "");
-                preItem = item;
-            }
+        //async Task ProcessImport()
+        //{
+        //    TempImport preItem = null;
+        //    var list = await _relicRepository.QueryAsync();
+        //    preItem = list.FirstOrDefault();
+        //    foreach (var item in list)
+        //    {
+        //        if (string.IsNullOrWhiteSpace(item.ProductId))
+        //        {
+        //            item.ProductId = preItem.ProductId;
+        //        }
+        //        item.ProductId = item.ProductId.Replace(" ", "");
+        //        item.ProductId = item.ProductId.Replace("\r", "");
+        //        item.ProductId = item.ProductId.Replace("\n", "");
+        //        preItem = item;
+        //    }
 
-            foreach (var item in list)
-            {
-                //await _relicRepository.UpdateAsync(item);
-            }
+        //    foreach (var item in list)
+        //    {
+        //        //await _relicRepository.UpdateAsync(item);
+        //    }
 
-            var saveList = new List<TempImportData>();
+        //    var saveList = new List<TempImportData>();
 
-            foreach (var item in list)
-            {
-                var productIds = Split(item.ProductId);
-                foreach (var pId in productIds)
-                {
-                    var temp = new TempImportData
-                    {
-                        RelicId = int.Parse(item.RelicId),
-                        ProductId = int.Parse(pId)
-                    };
-                    if (!saveList.Exists(x => x.RelicId == temp.RelicId && x.ProductId == temp.ProductId))
-                    {
-                        saveList.Add(temp);
-                    }
-                }
-            }
+        //    foreach (var item in list)
+        //    {
+        //        var productIds = Split(item.ProductId);
+        //        foreach (var pId in productIds)
+        //        {
+        //            var temp = new TempImportData
+        //            {
+        //                RelicId = int.Parse(item.RelicId),
+        //                ProductId = int.Parse(pId)
+        //            };
+        //            if (!saveList.Exists(x => x.RelicId == temp.RelicId && x.ProductId == temp.ProductId))
+        //            {
+        //                saveList.Add(temp);
+        //            }
+        //        }
+        //    }
 
-            foreach (var item in saveList)
-            {
-                await _relicRepository.InsertAsync(item);
-            }
+        //    foreach (var item in saveList)
+        //    {
+        //        await _relicRepository.InsertAsync(item);
+        //    }
 
-        }
+        //}
 
         private List<string> Split(string msg)
         {
