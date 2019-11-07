@@ -25,6 +25,65 @@ namespace Aix.ORMSample.Service
 
         }
 
+        public async Task TestOrm()
+        {
+            var exists = await _relicRepository.ExistsRelicItem(1000000);
+            var inList = await _relicRepository.QueryRelicItemByIds(new List<int>());
+        }
+
+        public async Task BuildSearchJson()
+        {
+            var pageView = new PageView()
+            {
+                PageIndex = 0,
+                PageSize = 10000
+            };
+            var relicData = await _relicRepository.PageQuery(pageView);
+            var allRelic = relicData.DataList;
+
+            var tagDict = new Dictionary<string, List<int>>();
+            foreach (var item in allRelic)
+            {
+                var tagList = await _relicRepository.QueryRelicTag(item.Id);
+                foreach (var tag in tagList.Take(7))
+                {
+                    if (string.IsNullOrEmpty(tag.Content)) continue;
+
+                    //if (tag.TagType == 6)
+                    //{
+                    //    var tokens =await GetToken(tag.Content);
+                    //}
+
+                    if (tagDict.ContainsKey(tag.Content))
+                    {
+                        tagDict[tag.Content].Add(tag.RelicId);
+                    }
+                    else
+                    {
+                        tagDict.Add(tag.Content, new List<int> { tag.RelicId });
+                    }
+                }
+            }
+
+
+
+            string savePath = Path.Combine("F:\\wenbohui\\tag.json");
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
+
+            using (FileStream fs = new FileStream(savePath, FileMode.Create))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.Write(JsonUtils.ToJson(tagDict));
+                }
+
+            }
+            _logger.LogInformation($"*****全部完成，共{tagDict.Count}条****");
+        }
+
         public async Task Load()
         {
             var pageView = new PageView()
@@ -47,7 +106,7 @@ namespace Aix.ORMSample.Service
                 foreach (var item in pageData.DataList)
                 {
                     var currentCount = Interlocked.Increment(ref Count);
-                    _logger.LogInformation($"************处理第{currentCount}条");
+                    _logger.LogInformation($"************开始处理第{currentCount}条,id={item.Id}");
                     //处理
 
                     var picData = await _relicRepository.QueryRelicItemPics(item.Id);
@@ -150,21 +209,49 @@ namespace Aix.ORMSample.Service
                 pageView.PageIndex++;
             }
 
-            string savePath = Path.Combine("F:\\wenbohui\\relic.json");
-            if (File.Exists(savePath))
-            {
-                File.Delete(savePath);
-            }
+            var isJson = true;
 
-            using (FileStream fs = new FileStream(savePath, FileMode.Create))
+            if (isJson)
             {
-                using (StreamWriter sw = new StreamWriter(fs))
+                string savePath = Path.Combine("F:\\wenbohui\\relic.json");
+                if (File.Exists(savePath))
                 {
-                    sw.Write(JsonUtils.ToJson(allResult));
+                    File.Delete(savePath);
+                }
+
+                using (FileStream fs = new FileStream(savePath, FileMode.Create))
+                {
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        sw.Write(JsonUtils.ToJson(allResult));
+                    }
+
+                }
+            }
+            else
+            {
+                string savePath = Path.Combine("F:\\wenbohui\\relic.txt");
+                if (File.Exists(savePath))
+                {
+                    File.Delete(savePath);
+                }
+
+                using (FileStream fs = new FileStream(savePath, FileMode.Create))
+                {
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        foreach (var item in allResult)
+                        {
+                            sw.WriteLine(JsonUtils.ToJson(item));
+                        }
+                    }
+
                 }
 
             }
-            _logger.LogInformation($"************全部完成****************");
+            _logger.LogInformation($"**********************************************");
+            _logger.LogInformation($"*****全部完成，共{allResult.Count}条****");
+            _logger.LogInformation($"**********************************************");
         }
 
         private List<string> GetOriginalImage(List<RelicItemPics> list)
@@ -191,7 +278,8 @@ namespace Aix.ORMSample.Service
             foreach (var item in list.Take(7))
             {
                 var temp = new
-                {
+                {  
+                    relicId=item.RelicId,
                     tagType = item.TagType,
                     content = item.Content,
                     sequence = item.Sequence,
@@ -246,6 +334,12 @@ namespace Aix.ORMSample.Service
         {
             var result = new List<string>();
             var url = "http://es.cihi.sdo.com:8080/_analyze";
+
+           // var res1 = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url,$"analyzer=ik_max_word&text={tag}");
+            //var res1 = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url, new Dictionary<string,string> {
+            //    { "analyzer","ik_max_word"},
+            //     { "text",tag}
+            //});
             var res = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url, new
             {
                 analyzer = "ik_max_word",

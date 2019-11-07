@@ -94,6 +94,7 @@ namespace Aix.ORMSample.Common.Utils
         public async Task<T> DoPostJsonAsync<T>(string url, object requestParams, IDictionary<string, string> headers = null)
         {
             string requestString = ToJson(WebUtils.ToKeyValuePairs(requestParams));
+           // string requestString = ToJson(requestParams);
             var httpContent = new StringContent(requestString, Encoding.UTF8, "application/json");
             //var httpContent = new StringContent(requestString, Encoding.UTF8);
             //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");//application/json; charset=UTF-8

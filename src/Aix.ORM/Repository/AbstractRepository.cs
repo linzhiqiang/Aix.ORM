@@ -9,6 +9,7 @@ using System.Text;
 using Dapper;
 using System.Threading.Tasks;
 using Aix.ORM.DbTransactionManager;
+using Aix.ORM.DTO;
 
 namespace Aix.ORM.Repository
 {
@@ -26,7 +27,7 @@ namespace Aix.ORM.Repository
         /// </summary>
         /// <param name="prefix">如A 最终sql语句就是A.Id，可为空</param>
         /// <returns></returns>
-        public string GetAllColumns<T>(string prefix="")where T:BaseEntity
+        public string GetAllColumns<T>(string prefix = "") where T : BaseEntity
         {
             return SQLBuilderHelper.GetAllColumns(typeof(T), this.GetORMDBType(), prefix);
         }
@@ -185,9 +186,19 @@ namespace Aix.ORM.Repository
 
         protected T Get<T>(string sql, object paras)
         {
-            return Query<T>(sql, paras).FirstOrDefault();
+            //return Query<T>(sql, paras).FirstOrDefault();
+            return QueryFirstOrDefault<T>(sql, null, paras);
+        }
+        protected T QueryFirstOrDefault<T>(string sql, object paras)
+        {
+            //return Query<T>(sql, paras).FirstOrDefault();
+            return QueryFirstOrDefault<T>(sql, null, paras);
         }
 
+        protected T ExecuteScalar<T>(string sql, object paras)
+        {
+            return ExecuteScalar<T>(sql, null, paras);
+        }
 
 
         protected List<T> Query<T>(string sql, object paras)
@@ -203,6 +214,38 @@ namespace Aix.ORM.Repository
                 list = mgr.Connection.Query<T>(sql, paras, mgr.Transaction, false, timeOut, CommandType.Text).ToList();
             }
             return list;
+        }
+
+        protected T QueryFirstOrDefault<T>(string sql, int? timeOut, object paras)
+        {
+            using (ConnectionManager mgr = GetConnection())
+            {
+                //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
+                return mgr.Connection.QueryFirstOrDefault<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+            }
+        }
+
+        protected T ExecuteScalar<T>(string sql, int? timeOut, object paras)
+        {
+            using (ConnectionManager mgr = GetConnection())
+            {
+                return mgr.Connection.ExecuteScalar<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+            }
+        }
+
+        protected MultipleResut2<Result1, Result2> QueryMultiple<Result1, Result2>(string sql, int? timeOut, object paras)
+        {
+            var ret = new MultipleResut2<Result1, Result2>();
+            using (ConnectionManager mgr = GetConnection())
+            {
+                using (var multiReader = mgr.Connection.QueryMultiple(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                {
+                    ret.R1 = multiReader.Read<Result1>().ToList();
+                    ret.R2 = multiReader.Read<Result2>().ToList();
+                }
+            }
+            return ret;
+
         }
 
         protected int SPExcute(string spName, object paras)

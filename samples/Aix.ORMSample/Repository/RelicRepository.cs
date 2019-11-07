@@ -1,7 +1,9 @@
-﻿using Aix.ORM.Common;
+﻿using Aix.ORM;
+using Aix.ORM.Common;
 using Aix.ORMSample.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,8 +18,25 @@ namespace Aix.ORMSample.Repository
 
         public Task<RelicItem> GetRelicItem(int relicId)
         {
-            return GetByPkAsync<RelicItem>(new RelicItem { Id=relicId });
+            return GetByPkAsync<RelicItem>(new RelicItem { Id = relicId });
         }
+
+        public async Task<bool> ExistsRelicItem(int relicId)
+        {
+            string sql = "SELECT 1 FROM relic_item WHERE id=@Id";
+            return await ExecuteScalarAsync<bool>(sql, new { Id = relicId });
+
+            //string sql = "SELECT 1 FROM relic_item WHERE id=@Id";
+            //return await GetAsync<bool>(sql, new { Id = relicId });
+        }
+
+        public Task<List<RelicItem>> QueryRelicItemByIds(List<int> relicIds)
+        {
+            var column = GetAllColumns<RelicItem>();
+            string sql = $"SELECT {column} FROM relic_item WHERE id in @Ids"; //内部已经处理了参数为空或者count=0
+            return QueryAsync<RelicItem>(sql, new { Ids = relicIds });
+        }
+
         public async Task<PagedList<RelicItem>> PageQuery(PageView pageView)
         {
             var column = GetAllColumns<RelicItem>();
@@ -53,6 +72,6 @@ namespace Aix.ORMSample.Repository
             return QueryAsync<RelicTag>(sql, new { RelicId = relicId });
         }
 
-
+       
     }
 }

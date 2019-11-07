@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Dapper;
 using System.Threading.Tasks;
+using Aix.ORM.DTO;
 
 namespace Aix.ORM.Repository
 {
@@ -92,8 +93,20 @@ namespace Aix.ORM.Repository
 
         protected async Task<T> GetAsync<T>(string sql, object paras)
         {
-            var result = await QueryAsync<T>(sql, paras);
-            return result.FirstOrDefault();
+            //var result = await QueryAsync<T>(sql, paras);
+            //return result.FirstOrDefault();
+
+            return await QueryFirstOrDefaultAsync<T>(sql, null, paras);
+        }
+
+        protected Task<T> QueryFirstOrDefaultAsync<T>(string sql, object paras)
+        {
+            return QueryFirstOrDefaultAsync<T>(sql, null, paras);
+        }
+
+        protected Task<T> ExecuteScalarAsync<T>(string sql, object paras)
+        {
+            return ExecuteScalarAsync<T>(sql, null, paras);
         }
 
         protected async Task<List<T>> QueryAsync<T>(string sql, object paras)
@@ -107,6 +120,38 @@ namespace Aix.ORM.Repository
             {
                 var list = await mgr.Connection.QueryAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
                 return list.ToList();
+            }
+        }
+
+        protected Task<T> QueryFirstOrDefaultAsync<T>(string sql, int? timeOut, object paras)
+        {
+            using (ConnectionManager mgr = GetConnection())
+            {
+                //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
+                return mgr.Connection.QueryFirstOrDefaultAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+            }
+        }
+
+        protected async Task<MultipleResut2<Result1, Result2>> QueryMultipleAsync<Result1, Result2>(string sql, int? timeOut, object paras)
+        {
+            var ret = new MultipleResut2<Result1, Result2>();
+            using (ConnectionManager mgr = GetConnection())
+            {
+                using (var multiReader = await mgr.Connection.QueryMultipleAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                {
+                    ret.R1 = (await multiReader.ReadAsync<Result1>()).ToList();
+                    ret.R2 = (await multiReader.ReadAsync<Result2>()).ToList();
+                }
+            }
+            return ret;
+
+        }
+
+        protected Task<T> ExecuteScalarAsync<T>(string sql, int? timeOut, object paras)
+        {
+            using (ConnectionManager mgr = GetConnection())
+            {
+                return mgr.Connection.ExecuteScalarAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
             }
         }
 

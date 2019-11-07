@@ -8,6 +8,9 @@ using System.Data;
 
 namespace Aix.ORMSample
 {
+    /// <summary>
+    /// OMR使用规范 所有表都有主键。新增、修改、删除通过对象形式操作
+    /// </summary>
     class Program
     {
         static void Main(string[] args)
