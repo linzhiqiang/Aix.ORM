@@ -247,6 +247,21 @@ namespace Aix.ORM.SQLBuilder
             return sqlbuilder.ToString();
         }
 
+        public string BuildDeleteSqlByProperty(EntityMeta meta, List<string> propertyNames)
+        {
+            AssertUtils.IsTrue(propertyNames.Count > 0, $"拼接删除语句属性列表为空,table:{meta.TableName}");
+            StringBuilder sqlbuilder = new StringBuilder();
+            sqlbuilder.Append($"DELETE FROM [{meta.TableName}] WHERE 1=1 ");
+            foreach (var item in propertyNames)
+            {
+                var columnMeta = meta.Columns.Find(x => x.PropertyName == item);
+                AssertUtils.IsNotNull(columnMeta, $"拼接删除语句时，属性对应的列不存在,table:{meta.TableName},PropertyName:{item}");
+                sqlbuilder.AppendFormat(" AND [{0}]=@{1}", columnMeta.ColumnName, item);
+            }
+
+            return sqlbuilder.ToString();
+        }
+
         public string GetAllColumns(EntityMeta meta, string prefix)
         {
             prefix = prefix ?? "";

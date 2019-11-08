@@ -10,6 +10,7 @@ using Dapper;
 using System.Threading.Tasks;
 using Aix.ORM.DbTransactionManager;
 using Aix.ORM.DTO;
+using System.Linq.Expressions;
 
 namespace Aix.ORM.Repository
 {
@@ -144,12 +145,40 @@ namespace Aix.ORM.Repository
         }
 
 
-        public int Delete(BaseEntity model)
+        public int DeleteByPk(BaseEntity model)
         {
             string sql = SQLBuilderHelper.GetDeleteByPkSql(model, this.GetORMDBType());
             return this.Excute(sql, model);
         }
 
+        public int DeleteByProperty<TModel, TProperty>(TModel model, Expression<Func<TModel, TProperty>> propertySelector) where TModel : BaseEntity
+        {
+            var propertyNames = new List<string> {
+                    GetPropertyNameFromExpression(propertySelector)
+             };
+            string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
+
+            return this.Excute(sql, model);
+        }
+
+        public int DeleteByProperty<TModel, TProperty1, TProperty2>(TModel model, Expression<Func<TModel, TProperty1>> propertySelector1, Expression<Func<TModel, TProperty2>> propertySelector2) where TModel : BaseEntity
+        {
+            var propertyNames = new List<string> {
+                    GetPropertyNameFromExpression(propertySelector1),
+                    GetPropertyNameFromExpression(propertySelector2)
+             };
+            string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
+
+            return this.Excute(sql, model);
+        }
+
+        private string GetPropertyNameFromExpression(LambdaExpression expression)
+        {
+            var memberExpression = expression.Body as MemberExpression;
+            if (memberExpression == null) throw new Exception($"表达式解析属性名称出错，不是MemberExpression类型");
+
+            return memberExpression.Member.Name;
+        }
 
 
         /// <summary>

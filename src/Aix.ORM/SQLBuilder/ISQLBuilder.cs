@@ -49,11 +49,19 @@ namespace Aix.ORM.SQLBuilder
         string BuildReplaceInsertSQL(EntityMeta meta);
 
         /// <summary>
+        /// 根据属性拼接删除语句
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="propertyNames"></param>
+        /// <returns></returns>
+        string BuildDeleteSqlByProperty(EntityMeta meta, List<string> propertyNames);
+
+        /// <summary>
         /// 获取所有列 逗号分隔 mysql用``,sqlserver用[]
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="prefix">如A 最终sql语句就是A.Id，可为空</param>
         /// <returns></returns>
-        string GetAllColumns(EntityMeta meta,string prefix);
+        string GetAllColumns(EntityMeta meta, string prefix);
     }
 }

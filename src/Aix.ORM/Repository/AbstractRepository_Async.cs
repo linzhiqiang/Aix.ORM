@@ -9,6 +9,7 @@ using System.Text;
 using Dapper;
 using System.Threading.Tasks;
 using Aix.ORM.DTO;
+using System.Linq.Expressions;
 
 namespace Aix.ORM.Repository
 {
@@ -66,10 +67,31 @@ namespace Aix.ORM.Repository
         }
 
 
-        public async Task<int> DeleteAsync(BaseEntity model)
+        public async Task<int> DeleteByPkAsync(BaseEntity model)
         {
             string sql = SQLBuilderHelper.GetDeleteByPkSql(model, this.GetORMDBType());
             return await this.ExcuteAsync(sql, model);
+        }
+
+        public Task<int> DeleteByPropertyAsync<TModel, TProperty>(TModel model, Expression<Func<TModel, TProperty>> propertySelector) where TModel : BaseEntity
+        {
+            var propertyNames = new List<string> {
+                    GetPropertyNameFromExpression(propertySelector)
+             };
+            string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
+
+            return this.ExcuteAsync(sql, model);
+        }
+
+        public Task<int> DeleteByPropertyAsync<TModel, TProperty1, TProperty2>(TModel model, Expression<Func<TModel, TProperty1>> propertySelector1, Expression<Func<TModel, TProperty2>> propertySelector2) where TModel : BaseEntity
+        {
+            var propertyNames = new List<string> {
+                    GetPropertyNameFromExpression(propertySelector1),
+                    GetPropertyNameFromExpression(propertySelector2)
+             };
+            string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
+
+            return this.ExcuteAsync(sql, model);
         }
 
         public async Task<T> GetByPkAsync<T>(BaseEntity model)

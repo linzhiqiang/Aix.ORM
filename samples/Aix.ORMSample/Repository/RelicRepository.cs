@@ -72,6 +72,11 @@ namespace Aix.ORMSample.Repository
             return QueryAsync<RelicTag>(sql, new { RelicId = relicId });
         }
 
-       
+        public Task<int> DeleteTest()
+        {
+            base.DeleteByProperty(new RelicTag { },x=>x.Content);
+
+            return Task.FromResult(0);
+        }
     }
 }

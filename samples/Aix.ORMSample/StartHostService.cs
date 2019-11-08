@@ -19,20 +19,31 @@ namespace Aix.ORMSample
         private RelicRepository _relicRepository;
         private UserOpusService _userOpusService;
         RelicService _relicService;
-        public StartHostService(ILogger<StartHostService> logger, UserRepository userRepository, RelicRepository relicRepository
-            , UserOpusService userOpusService, RelicService relicService)
+        private UserService _userService;
+        public StartHostService(ILogger<StartHostService> logger
+            , UserRepository userRepository
+            , RelicRepository relicRepository
+
+            , UserOpusService userOpusService
+            , RelicService relicService
+            , UserService userService)
         {
             _logger = logger;
             _userRepository = userRepository;
             _relicRepository = relicRepository;
+
+
             _userOpusService = userOpusService;
             _relicService = relicService;
+            _userService = userService;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
             {
-                await WithException(_relicService.BuildSearchJson);
+                await WithException(_userService.Test);
+
+                //await WithException(_relicService.BuildSearchJson);
                 //下载半边鱼的音频文件
                 //await WithException(_userOpusService.Load); 
 
@@ -153,7 +164,7 @@ namespace Aix.ORMSample
         async Task TestDelete()
         {
             var user = new UserInfo { UserId = 15 };
-            await _userRepository.DeleteAsync(user);
+            await _userRepository.DeleteByPkAsync(user);
         }
 
         async Task TestUpdate()

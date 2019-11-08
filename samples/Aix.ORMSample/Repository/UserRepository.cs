@@ -50,6 +50,7 @@ namespace Aix.ORMSample.Repository
                          where a.`parent_code`=@ParentCode order by a.sequence desc";
             return await base.QueryAsync<DictInfo>(sql, new { ParentCode = parentCode });
         }
+
     }
 
 

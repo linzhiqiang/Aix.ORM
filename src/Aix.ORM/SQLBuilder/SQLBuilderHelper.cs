@@ -86,6 +86,13 @@ namespace Aix.ORM.SQLBuilder
             return _ReplaceSqlCache[t];
         }
 
+        public static string BuildDeleteSqlByProperty(BaseEntity model, List<string> propertyNames, ORMDBType dbType)
+        {
+            Type t = model.GetType();
+            EntityMeta metadeta = EntityReflect.GetDefineInfoFromType(t);
+            string sql = SQLBuilderFactory.Instance.GetSQLBuilder(dbType).BuildDeleteSqlByProperty(metadeta, propertyNames);
+            return sql;
+        }
         public static string GetAllColumns(Type entityType, ORMDBType dbType, string prefix)
         {
 

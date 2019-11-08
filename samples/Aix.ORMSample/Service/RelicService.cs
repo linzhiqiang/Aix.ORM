@@ -66,6 +66,14 @@ namespace Aix.ORMSample.Service
             }
 
 
+            var targetJson = new List<object>();
+            foreach (var item in tagDict)
+            {
+                targetJson.Add(new { 
+                tag=item.Key,
+                list=item.Value
+                });
+            }
 
             string savePath = Path.Combine("F:\\wenbohui\\tag.json");
             if (File.Exists(savePath))
@@ -77,7 +85,7 @@ namespace Aix.ORMSample.Service
             {
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
-                    sw.Write(JsonUtils.ToJson(tagDict));
+                    sw.Write(JsonUtils.ToJson(targetJson)); //["tag":]
                 }
 
             }
@@ -129,7 +137,7 @@ namespace Aix.ORMSample.Service
 
                         if (!string.IsNullOrEmpty(tempPath))
                         {
-                            relicPicsListPath.Add(new ImageDTO { o = tempPath });
+                            relicPicsListPath.Add(JsonUtils.ToJson( new ImageDTO { o = tempPath }));
                             index++;
                         }
 
@@ -149,8 +157,8 @@ namespace Aix.ORMSample.Service
                                 id = videoUrl.Id,
                                 relicId = videoUrl.RelicId,
                                 mediaType = videoUrl.MediaType,
-                                CoverUrl = "",
-                                MediaUrl = tempPath
+                                coverUrl = "",
+                                mediaUrl = tempPath
                             });
                             index++;
                         }
@@ -170,8 +178,8 @@ namespace Aix.ORMSample.Service
                                 id = vrUrl.Id,
                                 relicId = vrUrl.RelicId,
                                 mediaType = vrUrl.MediaType,
-                                CoverUrl = "",
-                                MediaUrl = tempPath
+                                coverUrl = "",
+                                mediaUrl = tempPath
                             });
                             index++;
                         }
