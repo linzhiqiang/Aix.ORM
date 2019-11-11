@@ -27,8 +27,26 @@ namespace Aix.ORMSample.Service
 
         public async Task TestOrm()
         {
-            var exists = await _relicRepository.ExistsRelicItem(1000000);
-            var inList = await _relicRepository.QueryRelicItemByIds(new List<int>());
+            // var exists = await _relicRepository.ExistsRelicItem(1000000);
+            // var inList = await _relicRepository.QueryRelicItemByIds(new List<int>());
+
+            var autoResetEvent = new AutoResetEvent(false);
+            int index = 0;
+            while (true)
+            {
+                 Task.Run(async()=> {
+                  var pageView = new PageView()
+                  {
+                      PageIndex = 0,
+                      PageSize = 100
+                  };
+                  var pageData = await _relicRepository.PageQuery(pageView);
+                     autoResetEvent.Set();
+                     _logger.LogInformation($"************:{index++}");
+                 });
+
+                autoResetEvent.WaitOne();
+            }
         }
 
         public async Task BuildSearchJson()
@@ -190,7 +208,7 @@ namespace Aix.ORMSample.Service
                     {
                         id = item.Id,
                         title = item.Title, //标题
-                        //summary = item.Summary,//摘要
+                        summary = item.Summary,//摘要
                         content = item.Content,//内容
                         materialName = item.MaterialName,//材质
                         dynastyName = item.DynastyName,//年代

@@ -20,23 +20,49 @@ namespace Aix.ORM.Common
 
     public interface ICallContext<T>
     {
+        /// <summary>
+        /// 强制打开一个新的上下文
+        /// </summary>
         void OpenNewContext();
+
+        /// <summary>
+        /// 当前上下文是否包含key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         bool Contains(string key);
+
+        /// <summary>
+        /// 通过key设置当前上下文数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         void Set(string key, T value);
 
+        /// <summary>
+        /// 通过key获取当前上下文数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         T Get(string key);
 
+        /// <summary>
+        /// 通过key删除当前上下文数据
+        /// </summary>
+        /// <param name="key"></param>
         void Remove(string key);
-        
+
     }
 
-    public class CallContext<Child, T>:ICallContext<T>  where Child : ICallContext<T>, new()
+    /// <summary>
+    ///  上下文管理容器 【注意：最外层不能直接应用，要包一层，防止key重复】
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class CallContext<T> : ICallContext<T>
     {
-        public static ICallContext<T> Instance = new Child();
+        private static AsyncLocal<ConcurrentDictionary<string, T>> _asyncLocal = new AsyncLocal<ConcurrentDictionary<string, T>>();
 
-        static AsyncLocal<ConcurrentDictionary<string, T>> _asyncLocal = new AsyncLocal<ConcurrentDictionary<string, T>>();
-
-        public ConcurrentDictionary<string, T> _context
+        private ConcurrentDictionary<string, T> _context
         {
             get
             {
@@ -45,6 +71,7 @@ namespace Aix.ORM.Common
             }
         }
 
+        #region  ICallContext
         public void OpenNewContext()
         {
             _asyncLocal.Value = new ConcurrentDictionary<string, T>();
@@ -73,6 +100,8 @@ namespace Aix.ORM.Common
         {
             _context.TryRemove(key, out T value);
         }
+
+        #endregion
 
     }
 

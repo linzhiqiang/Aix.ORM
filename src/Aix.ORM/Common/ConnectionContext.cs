@@ -5,11 +5,11 @@ using System.Threading;
 
 namespace Aix.ORM.Common
 {
-
-    public class ConnectionContext : CallContext<ConnectionContext, ConnectionManager>
+    public class ConnectionContext : CallContext< ConnectionManager>
     {
-
+        public static ICallContext<ConnectionManager> Instance = new ConnectionContext();
     }
+    /*
     public interface IConnectionContext
     {
         void OpenNewConnectionContext();
@@ -63,4 +63,5 @@ namespace Aix.ORM.Common
         }
 
     }
+    */
 }

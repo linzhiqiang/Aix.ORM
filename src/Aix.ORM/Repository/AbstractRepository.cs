@@ -151,7 +151,7 @@ namespace Aix.ORM.Repository
             return this.Excute(sql, model);
         }
 
-        public int DeleteByProperty<TModel, TProperty>(TModel model, Expression<Func<TModel, TProperty>> propertySelector) where TModel : BaseEntity
+        public int DeleteByProperty<TModel, TProperty>(Expression<Func<TModel, TProperty>> propertySelector, TModel model) where TModel : BaseEntity
         {
             var propertyNames = new List<string> {
                     GetPropertyNameFromExpression(propertySelector)
@@ -161,11 +161,23 @@ namespace Aix.ORM.Repository
             return this.Excute(sql, model);
         }
 
-        public int DeleteByProperty<TModel, TProperty1, TProperty2>(TModel model, Expression<Func<TModel, TProperty1>> propertySelector1, Expression<Func<TModel, TProperty2>> propertySelector2) where TModel : BaseEntity
+        public int DeleteByProperty<TModel, TProperty1, TProperty2>( Expression<Func<TModel, TProperty1>> propertySelector1, Expression<Func<TModel, TProperty2>> propertySelector2, TModel model) where TModel : BaseEntity
         {
             var propertyNames = new List<string> {
                     GetPropertyNameFromExpression(propertySelector1),
                     GetPropertyNameFromExpression(propertySelector2)
+             };
+            string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
+
+            return this.Excute(sql, model);
+        }
+
+        public int DeleteByProperty<TModel, TProperty1, TProperty2, TProperty3>(Expression<Func<TModel, TProperty1>> propertySelector1, Expression<Func<TModel, TProperty2>> propertySelector2, Expression<Func<TModel, TProperty3>> propertySelector3, TModel model) where TModel : BaseEntity
+        {
+            var propertyNames = new List<string> {
+                    GetPropertyNameFromExpression(propertySelector1),
+                    GetPropertyNameFromExpression(propertySelector2),
+                    GetPropertyNameFromExpression(propertySelector3)
              };
             string sql = SQLBuilderHelper.BuildDeleteSqlByProperty(model, propertyNames, this.GetORMDBType());
 

@@ -31,9 +31,11 @@ namespace Aix.ORMSample.Service
             });
 
             rowCount = await _userRepository.DeleteByPkAsync(new UserInfo { UserId = 36 });
-            rowCount = await _userRepository.DeleteByPropertyAsync(new UserInfo { UserId = 114 }, x => x.UserId);
+            rowCount = await _userRepository.DeleteByPropertyAsync( x => x.UserId, new UserInfo { UserId = 114 });
 
-            rowCount = await _userRepository.DeleteByPropertyAsync(new UserInfo { UserName = "林志强2", Status = true }, x => x.UserName, x => x.Status);
+            rowCount = await _userRepository.DeleteByPropertyAsync( x => x.UserId, new UserInfo { UserId = 114 });
+
+            rowCount = await _userRepository.DeleteByPropertyAsync( x => x.UserName, x => x.Status, new UserInfo { UserName = "林志强2", Status = true });
 
         }
 

@@ -74,7 +74,7 @@ namespace Aix.ORMSample.Repository
 
         public Task<int> DeleteTest()
         {
-            base.DeleteByProperty(new RelicTag { },x=>x.Content);
+            base.DeleteByProperty(x => x.Content,new RelicTag { });
 
             return Task.FromResult(0);
         }
