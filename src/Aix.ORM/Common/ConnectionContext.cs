@@ -8,6 +8,11 @@ namespace Aix.ORM.Common
     public class ConnectionContext : CallContext< ConnectionManager>
     {
         public static ICallContext<ConnectionManager> Instance = new ConnectionContext();
+
+        private ConnectionContext()
+        { 
+        
+        }
     }
     /*
     public interface IConnectionContext
