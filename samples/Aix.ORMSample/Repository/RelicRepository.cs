@@ -11,7 +11,7 @@ namespace Aix.ORMSample.Repository
 {
     public class RelicRepository : BaseRepository
     {
-        public RelicRepository(DBOption option) : base(option.Master)
+        public RelicRepository(IServiceProvider provider, DBOption option) : base(provider,option.Master)
         {
 
         }

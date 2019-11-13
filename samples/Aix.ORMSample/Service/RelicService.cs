@@ -32,7 +32,7 @@ namespace Aix.ORMSample.Service
 
             var autoResetEvent = new AutoResetEvent(false);
             int index = 0;
-            while (true)
+           // while (true)
             {
                  Task.Run(async()=> {
                   var pageView = new PageView()

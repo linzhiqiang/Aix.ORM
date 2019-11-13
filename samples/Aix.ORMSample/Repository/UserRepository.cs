@@ -10,7 +10,7 @@ namespace Aix.ORMSample.Repository
 {
     public class UserRepository : BaseRepository
     {
-        public UserRepository(DBOption option) : base(option.Master)
+        public UserRepository(IServiceProvider provider, DBOption option) : base(provider, option.Master)
         {
 
         }

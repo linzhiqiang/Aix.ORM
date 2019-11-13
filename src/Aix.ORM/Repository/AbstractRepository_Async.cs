@@ -17,10 +17,14 @@ namespace Aix.ORM.Repository
     {
         public async Task<long> InsertAsync(BaseEntity entity)
         {
-            using (ConnectionManager mgr = GetConnection())
+            string sql = SQLBuilderHelper.GetInsertSql(entity, this.GetORMDBType());
+            using (var trace = GetSqlExecuteTrace())
             {
-                string sql = SQLBuilderHelper.GetInsertSql(entity, this.GetORMDBType());
-                return await mgr.Connection.QuerySingleAsync<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                trace.ExecuteStart(sql, entity);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    return await mgr.Connection.QuerySingleAsync<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                }
             }
         }
 
@@ -119,9 +123,13 @@ namespace Aix.ORM.Repository
 
         protected async Task<int> ExcuteAsync(string sql, int? timeOut, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                return await mgr.Connection.ExecuteAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                trace.ExecuteStart(sql, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    return await mgr.Connection.ExecuteAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                }
             }
         }
 
@@ -150,31 +158,43 @@ namespace Aix.ORM.Repository
 
         protected async Task<List<T>> QueryAsync<T>(string sql, int? timeOut, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                var list = await mgr.Connection.QueryAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
-                return list.ToList();
+                trace.ExecuteStart(sql, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    var list = await mgr.Connection.QueryAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return list.ToList();
+                }
             }
         }
 
         protected Task<T> QueryFirstOrDefaultAsync<T>(string sql, int? timeOut, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
-                return mgr.Connection.QueryFirstOrDefaultAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                trace.ExecuteStart(sql, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
+                    return mgr.Connection.QueryFirstOrDefaultAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                }
             }
         }
 
         protected async Task<MultipleResut2<Result1, Result2>> QueryMultipleAsync<Result1, Result2>(string sql, int? timeOut, object paras)
         {
             var ret = new MultipleResut2<Result1, Result2>();
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                using (var multiReader = await mgr.Connection.QueryMultipleAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                trace.ExecuteStart(sql, paras);
+                using (ConnectionManager mgr = GetConnection())
                 {
-                    ret.R1 = (await multiReader.ReadAsync<Result1>()).ToList();
-                    ret.R2 = (await multiReader.ReadAsync<Result2>()).ToList();
+                    using (var multiReader = await mgr.Connection.QueryMultipleAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                    {
+                        ret.R1 = (await multiReader.ReadAsync<Result1>()).ToList();
+                        ret.R2 = (await multiReader.ReadAsync<Result2>()).ToList();
+                    }
                 }
             }
             return ret;
@@ -183,17 +203,25 @@ namespace Aix.ORM.Repository
 
         protected Task<T> ExecuteScalarAsync<T>(string sql, int? timeOut, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                return mgr.Connection.ExecuteScalarAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                trace.ExecuteStart(sql, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    return mgr.Connection.ExecuteScalarAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                }
             }
         }
 
         protected async Task<int> SPExcuteAsync(string spName, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                return await mgr.Connection.ExecuteAsync(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                trace.ExecuteStart(spName, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    return await mgr.Connection.ExecuteAsync(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                }
             }
         }
 
@@ -205,10 +233,14 @@ namespace Aix.ORM.Repository
 
         protected async Task<List<T>> SPQueryAsync<T>(string spName, object paras)
         {
-            using (ConnectionManager mgr = GetConnection())
+            using (var trace = GetSqlExecuteTrace())
             {
-                var list = await mgr.Connection.QueryAsync<T>(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
-                return list.ToList();
+                trace.ExecuteStart(spName, paras);
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    var list = await mgr.Connection.QueryAsync<T>(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                    return list.ToList();
+                }
             }
         }
     }
