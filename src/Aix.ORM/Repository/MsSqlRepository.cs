@@ -34,7 +34,7 @@ namespace Aix.ORM.Repository
         {
             PagedList<T> pList = new PagedList<T>();
             long totalCount = -1;
-            if (view.PageIndex == 0 || view.IsFirstQueryTotal == false)
+            if (view.PageIndex == 1 || view.IsFirstQueryTotal == false)
             {
                 string totalSql = string.Format(" select count(1) from {0} where 1=1 {1}  ", sqlTable, sqlCondition);
                 totalCount = await GetAsync<int>(totalSql, param);
@@ -44,8 +44,8 @@ namespace Aix.ORM.Repository
             {
                 sqlOrder = " ORDER BY " + sqlPk;
             }
-            int pageStartIndex = view.PageSize * view.PageIndex + 1;
-            int pageEndIndex = view.PageSize * (view.PageIndex + 1);
+            int pageStartIndex = view.PageSize * (view.PageIndex-1) + 1;
+            int pageEndIndex = view.PageSize * view.PageIndex;
             string sql = string.Format(" select {0},ROW_NUMBER() OVER({1}) AS RowNumber  from {2} where 1=1  {3} ", sqlColumns, sqlOrder, sqlTable, sqlCondition);
             string pageSql =
                 string.Format(" select * from ({0}) as pagetable where RowNumber >={1}  and RowNumber<= {2}  ", sql, pageStartIndex, pageEndIndex);
@@ -72,7 +72,7 @@ namespace Aix.ORM.Repository
         {
             PagedList<T> pList = new PagedList<T>();
             long totalCount = -1;
-            if (view.PageIndex == 0 || view.IsFirstQueryTotal == false)
+            if (view.PageIndex == 1 || view.IsFirstQueryTotal == false)
             {
                 string totalSql = string.Format(" select count(1) from {0} where 1=1 {1}  ", sqlTable, sqlCondition);
                 totalCount =  Get<int>(totalSql, param);
@@ -82,8 +82,8 @@ namespace Aix.ORM.Repository
             {
                 sqlOrder = " ORDER BY " + sqlPk;
             }
-            int pageStartIndex = view.PageSize * view.PageIndex + 1;
-            int pageEndIndex = view.PageSize * (view.PageIndex + 1);
+            int pageStartIndex = view.PageSize * (view.PageIndex-1) + 1;
+            int pageEndIndex = view.PageSize * view.PageIndex;
             string sql = string.Format(" select {0},ROW_NUMBER() OVER({1}) AS RowNumber  from {2} where 1=1  {3} ", sqlColumns, sqlOrder, sqlTable, sqlCondition);
             string pageSql =
                 string.Format(" select * from ({0}) as pagetable where RowNumber >={1}  and RowNumber<= {2}  ", sql, pageStartIndex, pageEndIndex);

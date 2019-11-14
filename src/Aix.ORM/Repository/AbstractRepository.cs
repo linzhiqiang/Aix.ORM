@@ -74,12 +74,20 @@ namespace Aix.ORM.Repository
         {
             long ret = 0;
             string sql = SQLBuilderHelper.GetInsertSql(entity, this.GetORMDBType());
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, entity))
             {
-                trace.ExecuteStart(sql, entity);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    ret = mgr.Connection.QuerySingle<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        ret = mgr.Connection.QuerySingle<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
             return ret;
@@ -217,12 +225,20 @@ namespace Aix.ORM.Repository
         protected int Excute(string sql, int? timeOut, object paras)
         {
             int ret = -1;
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, paras))
             {
-                trace.ExecuteStart(sql, paras);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    ret = mgr.Connection.Execute(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        ret = mgr.Connection.Execute(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
             return ret;
@@ -253,12 +269,20 @@ namespace Aix.ORM.Repository
         protected List<T> Query<T>(string sql, int? timeOut, object paras)
         {
             List<T> list = null;
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, paras))
             {
-                trace.ExecuteStart(sql, paras);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    list = mgr.Connection.Query<T>(sql, paras, mgr.Transaction, false, timeOut, CommandType.Text).ToList();
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        list = mgr.Connection.Query<T>(sql, paras, mgr.Transaction, false, timeOut, CommandType.Text).ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
             return list;
@@ -266,25 +290,41 @@ namespace Aix.ORM.Repository
 
         protected T QueryFirstOrDefault<T>(string sql, int? timeOut, object paras)
         {
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, paras))
             {
-                trace.ExecuteStart(sql, paras);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
-                    return mgr.Connection.QueryFirstOrDefault<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
+                        return mgr.Connection.QueryFirstOrDefault<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
         }
 
         protected T ExecuteScalar<T>(string sql, int? timeOut, object paras)
         {
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, paras))
             {
-                trace.ExecuteStart(sql, paras);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    return mgr.Connection.ExecuteScalar<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        return mgr.Connection.ExecuteScalar<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
         }
@@ -292,17 +332,24 @@ namespace Aix.ORM.Repository
         protected MultipleResut2<Result1, Result2> QueryMultiple<Result1, Result2>(string sql, int? timeOut, object paras)
         {
             var ret = new MultipleResut2<Result1, Result2>();
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(sql, paras))
             {
-                trace.ExecuteStart(sql, paras);
-
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    using (var multiReader = mgr.Connection.QueryMultiple(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
                     {
-                        ret.R1 = multiReader.Read<Result1>().ToList();
-                        ret.R2 = multiReader.Read<Result2>().ToList();
+                        using (var multiReader = mgr.Connection.QueryMultiple(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                        {
+                            ret.R1 = multiReader.Read<Result1>().ToList();
+                            ret.R2 = multiReader.Read<Result2>().ToList();
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
             return ret;
@@ -312,12 +359,20 @@ namespace Aix.ORM.Repository
         protected int SPExcute(string spName, object paras)
         {
             int ret = -1;
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(spName, paras))
             {
-                trace.ExecuteStart(spName, paras);
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    ret = mgr.Connection.Execute(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        ret = mgr.Connection.Execute(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
                 }
             }
             return ret;
@@ -331,16 +386,23 @@ namespace Aix.ORM.Repository
         protected List<T> SPQuery<T>(string spName, object paras)
         {
             List<T> list = null;
-            using (var trace = GetSqlExecuteTrace())
+            using (var trace = GetSqlExecuteTrace(spName, paras))
             {
-                trace.ExecuteStart(spName, paras);
-
-                using (ConnectionManager mgr = GetConnection())
+                try
                 {
-                    list = mgr.Connection.Query<T>(spName, paras, mgr.Transaction, false, null, CommandType.StoredProcedure).ToList();
+                    trace.ExecuteStart();
+                    using (ConnectionManager mgr = GetConnection())
+                    {
+                        list = mgr.Connection.Query<T>(spName, paras, mgr.Transaction, false, null, CommandType.StoredProcedure).ToList();
+                    }
                 }
+                catch (Exception ex)
+                {
+                    trace.ExecuteException(ex);
+                    throw;
+                }
+                return list;
             }
-            return list;
         }
 
         protected ConnectionManager GetConnection()
@@ -348,9 +410,15 @@ namespace Aix.ORM.Repository
             return ConnectionManager.GetManager(this.ConnectionStrings);
         }
 
-        protected virtual ISqlExecuteTrace GetSqlExecuteTrace()
+        /// <summary>
+        /// 创建sql执行跟踪器对象
+        /// </summary>
+        /// <param name="sql">执行的sql语句</param>
+        /// <param name="paras">执行sql的参数对象</param>
+        /// <returns></returns>
+        protected virtual AbstractSqlExecuteTrace GetSqlExecuteTrace(string sql, object paras)
         {
-            return DefaultSqlTrace.Instance;
+            return DefaultSqlExecuteTrace.Instance;
 
         }
 

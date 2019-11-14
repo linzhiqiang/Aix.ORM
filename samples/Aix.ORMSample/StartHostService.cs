@@ -43,7 +43,7 @@ namespace Aix.ORMSample
             {
                 //await WithException(_userService.Test);
 
-                await WithException(_relicService.TestOrm);
+                await WithException(_relicService.Load);
                 //下载半边鱼的音频文件
                 //await WithException(_userOpusService.Load); 
 
@@ -175,7 +175,7 @@ namespace Aix.ORMSample
         async Task PageQuery()
         {
 
-            var users = await _userRepository.PageQuery(new ORM.Common.PageView { PageIndex = 0, PageSize = 5 });
+            var users = await _userRepository.PageQuery(new ORM.Common.PageView { PageIndex = 1, PageSize = 5 });
             var userInfo = await _userRepository.GetByPkAsync<UserInfo>(new UserInfo { UserId = 15 });
         }
 

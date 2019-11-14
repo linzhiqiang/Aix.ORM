@@ -92,11 +92,11 @@ namespace Aix.EntityGenerator.Builder
 
         private string GetFieldName(string columnName)
         {
-            return string.Format("_{0}", char.ToLower(columnName[0]) + columnName.Substring(1));
+            return string.Format("_{0}", char.ToLower(columnName[0]) + (columnName.Length > 1 ? columnName.Substring(1) : ""));
         }
 
-       
 
-       
+
+
     }
 }

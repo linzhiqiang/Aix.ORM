@@ -50,7 +50,7 @@ namespace Aix.ORMSample.Service
         {
             var pageView = new PageView()
             {
-                PageIndex = 0,
+                PageIndex = 1,
                 PageSize = 50
             };
             while (true)

@@ -32,18 +32,19 @@ namespace Aix.ORMSample.Service
 
             var autoResetEvent = new AutoResetEvent(false);
             int index = 0;
-           // while (true)
+            // while (true)
             {
-                 Task.Run(async()=> {
-                  var pageView = new PageView()
-                  {
-                      PageIndex = 0,
-                      PageSize = 100
-                  };
-                  var pageData = await _relicRepository.PageQuery(pageView);
-                     autoResetEvent.Set();
-                     _logger.LogInformation($"************:{index++}");
-                 });
+                await Task.Run(async () =>
+                {
+                    var pageView = new PageView()
+                    {
+                        PageIndex = 1,
+                        PageSize = 10
+                    };
+                    var pageData = await _relicRepository.PageQuery(pageView);
+                    autoResetEvent.Set();
+                    _logger.LogInformation($"************:{index++}");
+                });
 
                 autoResetEvent.WaitOne();
             }
@@ -53,7 +54,7 @@ namespace Aix.ORMSample.Service
         {
             var pageView = new PageView()
             {
-                PageIndex = 0,
+                PageIndex = 1,
                 PageSize = 10000
             };
             var relicData = await _relicRepository.PageQuery(pageView);
@@ -87,9 +88,10 @@ namespace Aix.ORMSample.Service
             var targetJson = new List<object>();
             foreach (var item in tagDict)
             {
-                targetJson.Add(new { 
-                tag=item.Key,
-                list=item.Value
+                targetJson.Add(new
+                {
+                    tag = item.Key,
+                    list = item.Value
                 });
             }
 
@@ -114,7 +116,7 @@ namespace Aix.ORMSample.Service
         {
             var pageView = new PageView()
             {
-                PageIndex = 0,
+                PageIndex = 1,
                 PageSize = 100
             };
             int Count = 0;
@@ -155,7 +157,7 @@ namespace Aix.ORMSample.Service
 
                         if (!string.IsNullOrEmpty(tempPath))
                         {
-                            relicPicsListPath.Add(JsonUtils.ToJson( new ImageDTO { o = tempPath }));
+                            relicPicsListPath.Add(JsonUtils.ToJson(new ImageDTO { o = tempPath }));
                             index++;
                         }
 
@@ -304,8 +306,8 @@ namespace Aix.ORMSample.Service
             foreach (var item in list.Take(7))
             {
                 var temp = new
-                {  
-                    relicId=item.RelicId,
+                {
+                    relicId = item.RelicId,
                     tagType = item.TagType,
                     content = item.Content,
                     sequence = item.Sequence,
@@ -361,7 +363,7 @@ namespace Aix.ORMSample.Service
             var result = new List<string>();
             var url = "http://es.cihi.sdo.com:8080/_analyze";
 
-           // var res1 = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url,$"analyzer=ik_max_word&text={tag}");
+            // var res1 = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url,$"analyzer=ik_max_word&text={tag}");
             //var res1 = await MyHttpClient.Instance.DoPostJsonAsync<ESTokenResponse>(url, new Dictionary<string,string> {
             //    { "analyzer","ik_max_word"},
             //     { "text",tag}

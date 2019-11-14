@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aix.ORMSample.Repository
 {
-    public class BaseRepository : MySqlRepository// MySqlRepository// MsSqlRepository
+    public class BaseRepository : MySqlRepository
     {
         protected IServiceProvider _provider;
         public BaseRepository(IServiceProvider provider, string connectionStrings) : base(connectionStrings)
@@ -17,33 +17,36 @@ namespace Aix.ORMSample.Repository
             _provider = provider;
         }
 
-        protected override ISqlExecuteTrace GetSqlExecuteTrace()
+        protected override AbstractSqlExecuteTrace GetSqlExecuteTrace(string sql, object paras)
         {
-            return new SqlExecuteTrace(_provider);
+            return new MySqlExecuteTrace(sql, paras, _provider);
         }
     }
 
-    public class SqlExecuteTrace : ISqlExecuteTrace
+    /// <summary>
+    /// sql执行 跟踪
+    /// </summary>
+    public class MySqlExecuteTrace : AbstractSqlExecuteTrace
     {
         protected IServiceProvider _provider;
-        private ILogger<SqlExecuteTrace> _logger;
-
-        private string _sql;
-        private object _param;
+        private ILogger<MySqlExecuteTrace> _logger;
         private Stopwatch _stopwatch;
 
-        public SqlExecuteTrace(IServiceProvider provider)
+        public MySqlExecuteTrace(string sql, object paras, IServiceProvider provider) : base(sql, paras)
         {
             _provider = provider;
-            _logger = provider.GetService<ILogger<SqlExecuteTrace>>();
+            _logger = provider.GetService<ILogger<MySqlExecuteTrace>>();
         }
-        public void ExecuteStart(string sql, object parm)
+        public override void ExecuteStart()
         {
-            _sql = sql;
-            _param = parm;
             _stopwatch = Stopwatch.StartNew();
         }
-        public void Dispose()
+
+        public override void ExecuteException(Exception ex)
+        {
+            _logger.LogError("SQL执行失败,  SQL={0},params = {1},Message={2},StackTrace={3}", Sql, Param ?? "", ex.Message, ex.StackTrace);
+        }
+        public override void ExecuteEnd()
         {
             _stopwatch.Stop();
 
@@ -51,11 +54,11 @@ namespace Aix.ORMSample.Repository
 
             if (totalTime > 500)
             {
-                _logger.LogWarning("SQL EXECUTE Finished in {0} ms,SQL={1},params = {2}", totalTime, _sql, _param ?? "");
+                _logger.LogWarning("SQL执行警告 in {0} ms,SQL={1},params = {2}", totalTime, Sql, Param ?? "");
             }
             else
             {
-                _logger.LogDebug("SQL EXECUTE Finished in {0} ms,SQL={1},params = {2}", totalTime, _sql, _param ?? "");
+                _logger.LogDebug("SQL执行跟踪 in {0} ms,SQL={1},params = {2}", totalTime, Sql, Param ?? "");
             }
         }
 

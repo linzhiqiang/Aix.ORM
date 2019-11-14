@@ -84,7 +84,14 @@ namespace Aix.EntityGenerator.Builder
                 return string.Join("", ss.ToArray());
             }
 
-            return char.ToUpper(str[0]) + str.Substring(1);
+            if (str.Length == 1)
+            {
+                return char.ToUpper(str[0]).ToString();
+            }
+            else
+            {
+                return char.ToUpper(str[0]) + str.Substring(1);
+            }
         }
 
         protected string UnderLineToCamel2(string str)

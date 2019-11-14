@@ -34,7 +34,7 @@ namespace Aix.ORM.Repository
         {
             PagedList<T> pList = new PagedList<T>();
             long totalCount = -1;
-            if (view.PageIndex == 0 || view.IsFirstQueryTotal == false)
+            if (view.PageIndex == 1 || view.IsFirstQueryTotal == false)
             {
                 string totalSql = string.Format(" select count(1) from {0} where 1=1 {1} ;", sqlTable, sqlCondition);
                 totalCount = await GetAsync<long>(totalSql, param);
@@ -44,7 +44,7 @@ namespace Aix.ORM.Repository
             {
                 sqlOrder = " ORDER BY " + sqlPk;
             }
-            int pageStartIndex = view.PageSize * view.PageIndex;
+            int pageStartIndex = view.PageSize * (view.PageIndex-1);
             int currentPageCount = view.PageSize;
             string sql = string.Format(" select {0} from {1} where 1=1  {2} {3} limit {4},{5} ;", sqlColumns, sqlTable, sqlCondition, sqlOrder, pageStartIndex, currentPageCount);
 
@@ -71,7 +71,7 @@ namespace Aix.ORM.Repository
         {
             PagedList<T> pList = new PagedList<T>();
             long totalCount = -1;
-            if (view.PageIndex == 0 || view.IsFirstQueryTotal == false)
+            if (view.PageIndex == 1 || view.IsFirstQueryTotal == false)
             {
                 string totalSql = string.Format(" select count(1) from {0} where 1=1 {1} ;", sqlTable, sqlCondition);
                 totalCount = Get<long>(totalSql, param);
@@ -81,7 +81,7 @@ namespace Aix.ORM.Repository
             {
                 sqlOrder = " ORDER BY " + sqlPk;
             }
-            int pageStartIndex = view.PageSize * view.PageIndex;
+            int pageStartIndex = view.PageSize * (view.PageIndex-1);
             int currentPageCount = view.PageSize;
             string sql = string.Format(" select {0} from {1} where 1=1  {2} {3} limit {4},{5} ;", sqlColumns, sqlTable, sqlCondition, sqlOrder, pageStartIndex, currentPageCount);
 

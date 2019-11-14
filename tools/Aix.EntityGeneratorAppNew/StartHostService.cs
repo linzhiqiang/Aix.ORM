@@ -36,9 +36,14 @@ namespace Aix.EntityGeneratorApp
             }
             while (true)
             {
-                Console.WriteLine("请选择操作：");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("************请选择操作：*****************");
                 Console.WriteLine("1：基本实体");
                 Console.WriteLine("2：ORM实体");
+                Console.WriteLine("q：退出");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine();
                 string type = Console.ReadLine();
 
                 IEntityBuilder builder = null;
@@ -50,9 +55,13 @@ namespace Aix.EntityGeneratorApp
                 {
                     builder = new ORMBuilder();
                 }
+                else if (type == "q")
+                {
+                    Environment.Exit(0);
+                }
                 else
                 {
-                    Console.WriteLine("怎么选择了一个空的操作呢");
+                    Console.WriteLine("怎么选择了一个空的操作呢，请继续......");
                     continue;
                 }
                 Console.WriteLine("开始生成......");

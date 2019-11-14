@@ -84,7 +84,7 @@ namespace Aix.ORM.Common
 
         public void Set(string key, T value)
         {
-            _context.AddOrUpdate(key, value, (k, v) => value);
+            _context.AddOrUpdate(key, value, (k, oldValue) => value);
         }
 
         public T Get(string key)

@@ -30,7 +30,7 @@ namespace Aix.ORMSample
                  .ConfigureLogging((context, factory) =>
                  {
                      factory.AddConsole();
-                     factory.SetMinimumLevel(LogLevel.Trace);
+                     factory.SetMinimumLevel(LogLevel.Debug);
                  })
                  .ConfigureServices(Startup.ConfigureServices);
 
