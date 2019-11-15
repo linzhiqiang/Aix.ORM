@@ -41,9 +41,9 @@ namespace Aix.ORMSample
         {
             Task.Run(async () =>
             {
-                //await WithException(_userService.Test);
+                await WithException(_userService.Test);
 
-                await WithException(_relicService.Load);
+                //await WithException(_relicService.Load);
                 //下载半边鱼的音频文件
                 //await WithException(_userOpusService.Load); 
 

@@ -23,6 +23,7 @@ namespace Aix.ORMSample
             AddDB(services);
 
             //repository
+            Dapper.SqlMapper.Settings.CommandTimeout = 10;//秒
             services.AddSingleton<UserRepository>();
             services.AddSingleton<RelicRepository>();
             services.AddSingleton<UserOpusRepository>();

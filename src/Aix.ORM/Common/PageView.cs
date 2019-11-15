@@ -30,7 +30,7 @@ namespace Aix.ORM.Common
         //public string SortOrder { get; set; }
 
         /// <summary>
-        /// 是不是每一页查询都返回总数，默认只有第一个也返回总数
+        /// 是不是每一页查询都返回总数，默认只有第一页返回总数
         /// </summary>
         public bool IsFirstQueryTotal { get; set; } = true;
 

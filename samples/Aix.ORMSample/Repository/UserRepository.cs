@@ -31,11 +31,14 @@ namespace Aix.ORMSample.Repository
             var table = " user_info ";
 
             var sqlCondition = new StringBuilder();
-           // sqlCondition.Append(" AND status=1");
+            // sqlCondition.Append(" AND status=1");
 
+            //sqlCondition.Append(" AND user_name like @UserName ");
+            var param = new { UserName = $"%林志%" };
             string sqlOrder = " ORDER BY  user_id  ASC ";
 
-            return await base.PagedQueryAsync<UserInfo>(pageView, column, table, sqlCondition.ToString(), null, "user_id", sqlOrder);
+           
+            return await base.PagedQueryAsync<UserInfo>(pageView, column, table, sqlCondition.ToString(), param, "user_id", sqlOrder);
         }
 
         public async Task<List<DictInfo>> QueryDictInfoByParentCodeAsync(string parentCode)

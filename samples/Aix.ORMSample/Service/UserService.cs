@@ -22,6 +22,9 @@ namespace Aix.ORMSample.Service
 
         public async Task Test()
         {
+
+
+            var users = await _userRepository.PageQuery(new ORM.Common.PageView { PageIndex = 1, PageSize = 5 });
             var rowCount = 0;
 
             rowCount = await _userRepository.UpdateAsync(new UserInfo { 

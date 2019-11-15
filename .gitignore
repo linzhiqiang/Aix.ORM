@@ -334,3 +334,9 @@ ASALocalRun/
 /Samples/Sample/obj
 /Aix.MessageBus/obj
 /Aix.MessageBus.Kafka/obj
+/tools/Aix.EntityGeneratorAppNew/config/appsettings.Stage.json
+/tools/Aix.EntityGeneratorAppNew/config/appsettings.json
+/tools/Aix.EntityGeneratorAppNew/config/appsettings.Production.json
+/samples/Aix.ORMSample/config/appsettings.Production.json
+/samples/Aix.ORMSample/config/appsettings.Stage.json
+/samples/Aix.ORMSample/config/appsettings.json
