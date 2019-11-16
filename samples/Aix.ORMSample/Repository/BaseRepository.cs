@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Aix.ORMSample.Common.Utils;
 
 namespace Aix.ORMSample.Repository
 {
@@ -44,7 +45,7 @@ namespace Aix.ORMSample.Repository
 
         public override void ExecuteException(Exception ex)
         {
-            _logger.LogError("SQL执行失败,  SQL={0},params = {1},Message={2},StackTrace={3}", Sql, Param ?? "", ex.Message, ex.StackTrace);
+            _logger.LogError("SQL执行失败,  SQL={0},params = {1},Message={2},StackTrace={3}", Sql, JsonUtils.ToJson(Param), ex.Message, ex.StackTrace);
         }
         public override void ExecuteEnd()
         {
@@ -54,11 +55,11 @@ namespace Aix.ORMSample.Repository
 
             if (totalTime > 500)
             {
-                _logger.LogWarning("SQL执行警告 in {0} ms,SQL={1},params = {2}", totalTime, Sql, Param ?? "");
+                _logger.LogWarning("SQL执行警告 in {0} ms,SQL={1},params = {2}", totalTime, Sql, JsonUtils.ToJson(Param));
             }
             else
             {
-                _logger.LogDebug("SQL执行跟踪 in {0} ms,SQL={1},params = {2}", totalTime, Sql, Param ?? "");
+                _logger.LogDebug("SQL执行跟踪 in {0} ms,SQL={1},params = {2}", totalTime, Sql, JsonUtils.ToJson(Param));
             }
         }
 
