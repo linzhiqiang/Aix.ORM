@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aix.ORMSample.Repository
 {
-    public class UserRepository : BaseRepository
+    public class UserRepository : BaseMySqlRepository
     {
         public UserRepository(IServiceProvider provider, DBOption option) : base(provider, option.Master)
         {

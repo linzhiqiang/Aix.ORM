@@ -15,7 +15,7 @@ namespace Aix.ORM.DBConnectionManager
             switch (dbType)
             {
                 case ORMDBType.MsSql:
-                    connection = CreateSqlServerConnection(connectionString);
+                    connection = CreateMsSqlConnection(connectionString);
                     break;
                 case ORMDBType.MySql:
                     connection = CreateMySqlConnection(connectionString);
@@ -30,9 +30,9 @@ namespace Aix.ORM.DBConnectionManager
             return connection;
         }
 
-        public virtual IDbConnection CreateSqlServerConnection(string connectionString)
+        public virtual IDbConnection CreateMsSqlConnection(string connectionString)
         {
-            throw new NotImplementedException($"请实现:{this.GetType().FullName}.CreateSqlServerConnection");
+            throw new NotImplementedException($"请实现:{this.GetType().FullName}.CreateMsSqlConnection");
         }
 
         public virtual IDbConnection CreateMySqlConnection(string connectionString)
@@ -53,7 +53,7 @@ namespace Aix.ORM.DBConnectionManager
         private Func<string, IDbConnection> MsSqlFunc = null;
         private Func<string, IDbConnection> MySqlFunc = null;
 
-        public override IDbConnection CreateSqlServerConnection(string connectionString)
+        public override IDbConnection CreateMsSqlConnection(string connectionString)
         {
             if (MsSqlFunc == null)
             {

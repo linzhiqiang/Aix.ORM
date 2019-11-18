@@ -45,9 +45,10 @@ namespace Aix.ORMSample
         }
     }
 
+    /*
     public class DBConnectionFactory : AbstractConnectionFactory
     {
-        public override IDbConnection CreateSqlServerConnection(string connectionString)
+        public override IDbConnection CreateMsSqlConnection(string connectionString)
         {
             return new SqlConnection(connectionString);
         }
@@ -57,5 +58,6 @@ namespace Aix.ORMSample
             return new MySqlConnection(connectionString);
         }
     }
+    */
 
 }

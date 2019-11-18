@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aix.ORMSample.Repository
 {
-    public class RelicRepository : BaseRepository
+    public class RelicRepository : BaseMySqlRepository
     {
         public RelicRepository(IServiceProvider provider, DBOption option) : base(provider,option.Master)
         {
