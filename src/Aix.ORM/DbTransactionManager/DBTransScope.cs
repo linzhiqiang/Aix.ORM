@@ -1,4 +1,5 @@
-﻿using Aix.ORM.DBConnectionManager;
+﻿using Aix.ORM.Common;
+using Aix.ORM.DBConnectionManager;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,14 +27,14 @@ namespace Aix.ORM.DbTransactionManager
         private bool _beginTransactionIsInCurrentTransScope = false;
         private bool _completed = false;
 
-        public DBTransScope(string connectionStrings) : this(connectionStrings, TransScopeOption.Required)
+        public DBTransScope(string connectionStrings, ORMDBType dbTyp) : this(connectionStrings, dbTyp,TransScopeOption.Required)
         {
         }
 
-        public DBTransScope(string connectionStrings, TransScopeOption option)
+        public DBTransScope(string connectionStrings, ORMDBType dbTyp,TransScopeOption option)
         {
             //如果有多数据库，再开放个构造函数 传递数据库连接字符串
-            _connectionManager = ConnectionManager.GetManager(connectionStrings);
+            _connectionManager = ConnectionManager.GetManager(connectionStrings, dbTyp);
             if (!_connectionManager.IsExistDbTransaction() || option == TransScopeOption.RequiresNew)
             {
                 _tran = _connectionManager.BeginTransaction();

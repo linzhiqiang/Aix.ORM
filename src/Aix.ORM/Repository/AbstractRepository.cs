@@ -16,12 +16,15 @@ namespace Aix.ORM.Repository
 {
     public abstract partial class AbstractRepository
     {
+        /// <summary>
+        /// 数据库连接
+        /// </summary>
+        protected string ConnectionStrings { get; set; }
+
         public AbstractRepository(string connectionStrings)
         {
             this.ConnectionStrings = connectionStrings;
         }
-
-        private string ConnectionStrings { get; set; }
 
         /// <summary>
         /// 获取所有列 逗号分隔 mysql用``,sqlserver用[]
@@ -49,7 +52,7 @@ namespace Aix.ORM.Repository
         /// <returns></returns>
         public IDBTransScope BeginTransScope(TransScopeOption scopeOption = TransScopeOption.Required)
         {
-            return new DBTransScope(ConnectionStrings, scopeOption);
+            return new DBTransScope(ConnectionStrings, this.GetORMDBType(), scopeOption);
         }
 
         //public void Commit(IDBTransScope transScope)
@@ -95,8 +98,6 @@ namespace Aix.ORM.Repository
             ret = Excute(sql, entity);
             return ret;
         }
-
-
 
         /// <summary>
         /// 批量新增 （新增相同的列）
@@ -146,7 +147,6 @@ namespace Aix.ORM.Repository
             return ret;
         }
 
-
         public int DeleteByPk(BaseEntity model)
         {
             string sql = SQLBuilderHelper.GetDeleteByPkSql(model, this.GetORMDBType());
@@ -194,7 +194,6 @@ namespace Aix.ORM.Repository
             return memberExpression.Member.Name;
         }
 
-
         /// <summary>
         /// 根据主键查询
         /// </summary>
@@ -228,6 +227,7 @@ namespace Aix.ORM.Repository
             //return Query<T>(sql, paras).FirstOrDefault();
             return QueryFirstOrDefault<T>(sql, null, paras);
         }
+
         protected T QueryFirstOrDefault<T>(string sql, object paras)
         {
             //return Query<T>(sql, paras).FirstOrDefault();
@@ -238,7 +238,6 @@ namespace Aix.ORM.Repository
         {
             return ExecuteScalar<T>(sql, null, paras);
         }
-
 
         protected List<T> Query<T>(string sql, object paras)
         {
@@ -367,7 +366,7 @@ namespace Aix.ORM.Repository
 
         protected ConnectionManager GetConnection()
         {
-            return ConnectionManager.GetManager(this.ConnectionStrings);
+            return ConnectionManager.GetManager(this.ConnectionStrings, this.GetORMDBType());
         }
 
         /// <summary>

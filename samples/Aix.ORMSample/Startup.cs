@@ -39,25 +39,23 @@ namespace Aix.ORMSample
 
         private static void AddDB(IServiceCollection services)
         {
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-            ConnectionFactory.Instance.DefaultFactory = new MySqlConnectionFactory();
+            //Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            //  ConnectionFactoryFactory.Instance.Factory = new DBConnectionFactory();
             // ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
         }
     }
 
-    public class MsSqlConnectionFactory : IConnectionFactory
+    public class DBConnectionFactory : AbstractConnectionFactory
     {
-        public IDbConnection CreateConnection(string connectionString)
+        public override IDbConnection CreateSqlServerConnection(string connectionString)
         {
             return new SqlConnection(connectionString);
         }
-    }
 
-    public class MySqlConnectionFactory : IConnectionFactory
-    {
-        public IDbConnection CreateConnection(string connectionString)
+        public override IDbConnection CreateMySqlConnection(string connectionString)
         {
             return new MySqlConnection(connectionString);
         }
     }
+
 }

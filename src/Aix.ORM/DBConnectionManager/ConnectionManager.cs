@@ -41,7 +41,7 @@ namespace Aix.ORM.DBConnectionManager
 
         #region 静态方法
         private static object _lock = new object();
-        public static ConnectionManager GetManager(string connectionString)
+        public static ConnectionManager GetManager(string connectionString, ORMDBType dbType)
         {
             AssertUtils.IsNotEmpty(connectionString, "连接字符串为空");
             ConnectionManager mgr = null;
@@ -51,7 +51,7 @@ namespace Aix.ORM.DBConnectionManager
                     if (!ConnectionContext.Instance.Contains(connectionString))
                     {
                         //Console.WriteLine("获取新连接");
-                        mgr = new ConnectionManager(connectionString);
+                        mgr = new ConnectionManager(connectionString, dbType);
                         ConnectionContext.Instance.Set(connectionString, mgr);
                     }
                 }
@@ -63,10 +63,10 @@ namespace Aix.ORM.DBConnectionManager
         #endregion
 
         #region 构造
-        private ConnectionManager(string connectionString)
+        private ConnectionManager(string connectionString, ORMDBType dbType)
         {
             _dbConnectionString = connectionString;
-            _connection = ConnectionFactory.Instance.GetConnectionFactory().CreateConnection(connectionString);
+            _connection = ConnectionFactoryFactory.Instance.GetConnectionFactory().CreateConnection(connectionString, dbType);
             if (_connection.State != ConnectionState.Open)
             {
                 _connection.Open();
