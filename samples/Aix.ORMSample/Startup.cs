@@ -1,4 +1,5 @@
-﻿using Aix.ORM.DBConnectionManager;
+﻿using Aix.ORM;
+using Aix.ORM.DBConnectionManager;
 using Aix.ORMSample.Repository;
 using Aix.ORMSample.Service;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,6 @@ namespace Aix.ORMSample
             AddDB(services);
 
             //repository
-            Dapper.SqlMapper.Settings.CommandTimeout = 10;//秒
             services.AddSingleton<UserRepository>();
             services.AddSingleton<RelicRepository>();
             services.AddSingleton<UserOpusRepository>();
@@ -39,13 +39,13 @@ namespace Aix.ORMSample
 
         private static void AddDB(IServiceCollection services)
         {
-            //Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-            //  ConnectionFactoryFactory.Instance.Factory = new DBConnectionFactory();
-            // ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; 
+            Dapper.SqlMapper.Settings.CommandTimeout = 10;//秒
+            ORMSetting.SetConnectionFactory(new DBConnectionFactory());
         }
     }
 
-    /*
+    
     public class DBConnectionFactory : AbstractConnectionFactory
     {
         public override IDbConnection CreateMsSqlConnection(string connectionString)
@@ -58,6 +58,6 @@ namespace Aix.ORMSample
             return new MySqlConnection(connectionString);
         }
     }
-    */
+    
 
 }

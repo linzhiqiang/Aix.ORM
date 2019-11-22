@@ -16,12 +16,12 @@ namespace Aix.ORM.DBConnectionManager
         public static ConnectionFactoryFactory Instance = new ConnectionFactoryFactory();
 
 
-        public AbstractConnectionFactory Factory = new DefaultConnectionFactory();
+        private AbstractConnectionFactory Factory = new DefaultConnectionFactory();
 
         private ConnectionFactoryFactory()
         {
             //User_Id->UserId
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            //Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
         public AbstractConnectionFactory GetConnectionFactory()
@@ -29,7 +29,13 @@ namespace Aix.ORM.DBConnectionManager
             return Factory;
         }
 
+        internal void SetConnectionFactory(AbstractConnectionFactory abstractConnectionFactory)
+        {
+            AssertUtils.IsNotNull(abstractConnectionFactory, "设置数据库连接工厂为空");
+            Factory = abstractConnectionFactory;
+        }
+
     }
 
-    
+
 }

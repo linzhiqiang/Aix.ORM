@@ -1,10 +1,13 @@
 ﻿using Aix.ORM.DBConnectionManager;
+using Aix.ORMSample.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aix.ORMSample
 {
@@ -16,7 +19,7 @@ namespace Aix.ORMSample
         static void Main(string[] args)
         {
             System.Threading.ThreadPool.SetMinThreads(100, 100);
-            var host = new HostBuilder()
+            var hostBuilder = new HostBuilder()
                  .ConfigureHostConfiguration(builder =>
                  {
                      builder.AddEnvironmentVariables(prefix: "Demo_");
@@ -34,11 +37,18 @@ namespace Aix.ORMSample
                  })
                  .ConfigureServices(Startup.ConfigureServices);
 
-
-            host.RunConsoleAsync().Wait();
+            RunConsoleAsync(hostBuilder).Wait(); //重写的目的是为了拿到ServiceProvide放入全局变量
+            //hostBuilder.RunConsoleAsync().Wait();
             Console.WriteLine("服务已退出");
+        }
+
+        public static Task RunConsoleAsync(IHostBuilder hostBuilder, CancellationToken cancellationToken = default)
+        {
+            var host = hostBuilder.UseConsoleLifetime().Build();
+            ServiceLocator.Instance = host.Services;
+            return host.RunAsync(cancellationToken);
         }
     }
 
- 
+
 }
