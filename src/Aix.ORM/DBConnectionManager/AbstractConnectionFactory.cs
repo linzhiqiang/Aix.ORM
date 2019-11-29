@@ -30,16 +30,31 @@ namespace Aix.ORM.DBConnectionManager
             return connection;
         }
 
+        /// <summary>
+        /// 创建sql server连接
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
         public virtual IDbConnection CreateMsSqlConnection(string connectionString)
         {
             throw new NotImplementedException($"请实现:{this.GetType().FullName}.CreateMsSqlConnection");
         }
 
+        /// <summary>
+        /// 创建mysql连接
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
         public virtual IDbConnection CreateMySqlConnection(string connectionString)
         {
             throw new NotImplementedException($"请实现:{this.GetType().FullName}.CreateMySqlConnection");
         }
 
+        /// <summary>
+        /// 创建oracle连接
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
         public virtual IDbConnection CreateOracleSqlSqlConnection(string connectionString)
         {
             throw new NotImplementedException($"请实现:{this.GetType().FullName}.CreateOracleSqlSqlConnection");

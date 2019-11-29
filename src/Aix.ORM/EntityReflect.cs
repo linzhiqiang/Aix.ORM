@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Aix.ORM
 {
+    /// <summary>
+    /// 实体和表元数据机械
+    /// </summary>
     public class EntityReflect
     {
         private static Dictionary<Type, EntityMeta> _cache = new Dictionary<Type, EntityMeta>();
@@ -82,12 +85,24 @@ namespace Aix.ORM
 
     public class EntityColumnMeta
     {
+        /// <summary>
+        /// 实体属性名称
+        /// </summary>
         public string PropertyName { get; set; }
+
+        /// <summary>
+        /// 实体对应表的列名
+        /// </summary>
         public string ColumnName { get; set; }
 
+        /// <summary>
+        /// 是否主键 
+        /// </summary>
         public bool PrimaryKey { get; set; }
 
-
+       /// <summary>
+       /// 是否自增列
+       /// </summary>
         public bool Identity { get; set; }
     }
 }

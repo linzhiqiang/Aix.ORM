@@ -50,14 +50,13 @@ namespace Aix.ORM.DBConnectionManager
                 {
                     if (!ConnectionContext.Instance.Contains(connectionString))
                     {
-                        //Console.WriteLine("获取新连接");
                         mgr = new ConnectionManager(connectionString, dbType);
                         ConnectionContext.Instance.Set(connectionString, mgr);
                     }
                 }
             mgr = ConnectionContext.Instance.Get(connectionString);
 
-            mgr.AddRef();
+            mgr.AddRefCount();
             return mgr;
         }
         #endregion
@@ -92,13 +91,13 @@ namespace Aix.ORM.DBConnectionManager
         private int _refCount;
         public int RefCount => this._refCount;
 
-        private void AddRef()
+        private void AddRefCount()
         {
             _refCount += 1;
         }
 
         private object _releaseLock = new object();
-        private void DeRef()
+        private void DeRefCount()
         {
             lock (_releaseLock)
             {
@@ -110,7 +109,6 @@ namespace Aix.ORM.DBConnectionManager
                         if (_connection != null && _connection.State != ConnectionState.Closed)
                         {
                             _connection.Close();
-                            //Console.WriteLine("连接关闭");
                         }
                     }
                     finally
@@ -128,7 +126,7 @@ namespace Aix.ORM.DBConnectionManager
         #region  IDisposable
         public void Dispose()
         {
-            DeRef();
+            DeRefCount();
         }
         #endregion
 

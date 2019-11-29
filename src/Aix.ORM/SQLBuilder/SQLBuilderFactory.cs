@@ -14,6 +14,10 @@ namespace Aix.ORM.SQLBuilder
 
         private ISQLBuilder MySql = new MySqlSQLBuilder();
 
+        private ISQLBuilder OracleSql = new OracleSQLBuilder();
+
+
+
         public ISQLBuilder GetSQLBuilder(ORMDBType type)
         {
             switch (type)
@@ -25,7 +29,7 @@ namespace Aix.ORM.SQLBuilder
                     return MySql;
 
                 case ORMDBType.Oracle:
-                    throw new Exception("未实现OracleSQLBuilder");
+                    return OracleSql;
                 default:
                     throw new Exception("不存在的数据库类型");
 

@@ -39,6 +39,7 @@ namespace Aix.ORMSample
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
+           // _logger.LogInformation("start");
             Task.Run(async () =>
             {
                 await WithException(_userService.Test);

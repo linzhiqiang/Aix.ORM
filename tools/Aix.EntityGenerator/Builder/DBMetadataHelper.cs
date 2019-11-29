@@ -1,5 +1,6 @@
 ﻿using Aix.EntityGenerator.Entity;
 using Aix.EntityGenerator.Factory;
+using Aix.ORM.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,14 @@ namespace Aix.EntityGenerator.Builder
     {
         public static Dictionary<string, TableInfo> GetTableInfo()
         {
+            // 
+            return GetTableInfo(GeneratorOptions.Instance.DBtype, GeneratorOptions.Instance.Maindb);
+        }
+        public static Dictionary<string, TableInfo> GetTableInfo(ORMDBType dbType,string connectionString)
+        {
             Dictionary<string, TableInfo> dict = new Dictionary<string, TableInfo>();
+           
+
             IDBMetadata dBMetadata = DBObjectFactoryFactory.Instance.GetDBObjectFactory().GetDBMetadata();
 
             string dbName = dBMetadata.GetDBName();

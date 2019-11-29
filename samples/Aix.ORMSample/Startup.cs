@@ -18,6 +18,7 @@ namespace Aix.ORMSample
     {
         internal static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+           
             #region 注入
             var dbOption = context.Configuration.GetSection("connectionStrings").Get<DBOption>();
             services.AddSingleton(dbOption);
@@ -41,7 +42,7 @@ namespace Aix.ORMSample
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; 
             Dapper.SqlMapper.Settings.CommandTimeout = 10;//秒
-            ORMSetting.SetConnectionFactory(new DBConnectionFactory());
+            ORMSettings.SetConnectionFactory(new DBConnectionFactory());
         }
     }
 

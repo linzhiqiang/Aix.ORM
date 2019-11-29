@@ -8,7 +8,7 @@ namespace Aix.EntityGenerator.Factory
 {
    public class SqlServerObjectFactory: IDBObjectFactory
     {
-        public IDBMetadata GetDBMetadata()
+        public IDBMetadata GetDBMetadata( )
         {
             return new SqlServerMetadata();
         }

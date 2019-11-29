@@ -8,10 +8,19 @@ using System.Text;
 
 namespace Aix.ORM.DbTransactionManager
 {
+    /// <summary>
+    /// 事务操作
+    /// </summary>
     public interface IDBTransScope : IDisposable
     {
+        /// <summary>
+        /// 提交事务
+        /// </summary>
         void Commit();
 
+        /// <summary>
+        /// 回滚事务 使用using时未提交或者提交出错会自动回滚，无需手动调用改方法；未使用using时需自行调用改方法
+        /// </summary>
         void Rollback();
     }
     /// <summary>
@@ -72,12 +81,17 @@ namespace Aix.ORM.DbTransactionManager
         /// </summary>
         public void Close()
         {
-            if (!_completed)
+            try
             {
-                Rollback();
+                if (!_completed) //事务没有提交或者 没有提交成功
+                {
+                    Rollback();
+                }
             }
-
-            _connectionManager.Dispose();
+            finally
+            {
+                _connectionManager.Dispose();
+            }
         }
 
 

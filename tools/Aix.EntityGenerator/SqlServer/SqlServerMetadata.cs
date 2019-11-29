@@ -15,7 +15,7 @@ namespace Aix.EntityGenerator.SqlServer
         {
             get
             {
-                return GeneratorOption.Instance.Maindb;
+                return GeneratorOptions.Instance.Maindb;
             }
         }
 

@@ -1,9 +1,14 @@
-﻿using Aix.ORM.DBConnectionManager;
+﻿using Aix.EntityGenerator;
+using Aix.EntityGeneratorNew;
+using Aix.ORM.DBConnectionManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aix.EntityGeneratorApp
 {
@@ -24,15 +29,23 @@ namespace Aix.EntityGeneratorApp
                   })
                 .ConfigureLogging((context, factory) =>
                 {
-
+                    factory.AddConsole();
+                    factory.SetMinimumLevel(LogLevel.Information);
                 })
                 .ConfigureServices(Startup.ConfigureServices);
 
 
-            host.RunConsoleAsync().Wait();
+            RunConsoleAsync(host).Wait();
             Console.WriteLine("服务已退出");
         }
 
-       
+        public static Task RunConsoleAsync(IHostBuilder hostBuilder, CancellationToken cancellationToken = default)
+        {
+            var host = hostBuilder.UseConsoleLifetime().Build();
+            ServiceLocator.Instance = host.Services;
+            return host.RunAsync(cancellationToken);
+        }
+
+
     }
 }

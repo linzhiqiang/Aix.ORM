@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Aix.ORM
 {
+    /// <summary>
+    /// 实体类的特性 对应数据库表名
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class TableAttribute : Attribute
     {
@@ -15,6 +18,9 @@ namespace Aix.ORM
         public string TableName { get; private set; }
     }
 
+    /// <summary>
+    /// 属性特性 对应数据路列信息
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ColumnAttribute : Attribute
     {
@@ -25,19 +31,21 @@ namespace Aix.ORM
         }
     }
 
+    /// <summary>
+    /// 属性特性 对应列是否为主键
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class PrimaryKeyAttribute : Attribute
     {
 
     }
 
+    /// <summary>
+    /// 属性特性 对应列是否为自增列
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class IdentityAttribute : Attribute
     {
     }
 
-    [AttributeUsage(AttributeTargets.Property)]
-    public class IgnoreAttribute : Attribute
-    {
-    }
 }

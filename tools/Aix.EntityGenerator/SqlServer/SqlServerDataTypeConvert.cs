@@ -55,8 +55,6 @@ namespace Aix.EntityGenerator.SqlServer
                     dataType = "string";
                     break;
 
-
-
                 case "binary":
                 case "varbinary":
                     dataType = "byte[]";

@@ -65,7 +65,6 @@ namespace Aix.EntityGenerator.MySql
                     dataType = "string";
                     break;
 
-
                 case "binary":
                 case "varbinary":
                 case "blob":

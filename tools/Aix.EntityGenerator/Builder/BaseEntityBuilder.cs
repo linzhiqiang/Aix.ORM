@@ -11,10 +11,53 @@ namespace Aix.EntityGenerator.Builder
     public abstract class BaseEntityBuilder : IEntityBuilder
     {
         protected IDataTypeConvert DataTypeConvert = DBObjectFactoryFactory.Instance.GetDBObjectFactory().GetDataTypeConvert();
-        //protected IBaseEntityInfo BaseEntityInfo = DBObjectFactoryFactory.Instance.GetDBObjectFactory().GetBaseEntityInfo();
+
         public void Builder(string nameSpace)
         {
-            //string nameSpace = "My.EntityBuilder";
+            if (GeneratorOptions.Instance.MultipleFiles == false)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(GetFileHeader(nameSpace));
+                sb.AppendLine("{");
+
+                Dictionary<string, TableInfo> dict = DBMetadataHelper.GetTableInfo();
+
+                foreach (var item in dict)
+                {
+                    Console.WriteLine();
+                    Console.Write("开始生成表：{0}......", item.Key);
+                    sb.AppendLine(BuildClass(item.Value));
+                    Console.Write("......成功");
+                }
+                sb.AppendLine("}");
+
+                SaveToFile(sb.ToString(), "Entities.cs");
+            }
+            else
+            {
+                Dictionary<string, TableInfo> dict = DBMetadataHelper.GetTableInfo();
+
+                foreach (var item in dict)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(GetFileHeader(nameSpace));
+                    sb.AppendLine("{");
+
+                    Console.WriteLine();
+                    Console.Write("开始生成表：{0}......", item.Key);
+                    sb.AppendLine(BuildClass(item.Value));
+                    Console.Write("......成功");
+                    sb.AppendLine("}");
+
+                    SaveToFile(sb.ToString(), $"{GetClassName(item.Key)}.cs");
+
+                }
+
+            }
+        }
+
+        private string GetFileHeader(string nameSpace)
+        {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("/*");
@@ -31,35 +74,25 @@ namespace Aix.EntityGenerator.Builder
             sb.AppendLine();
             sb.AppendFormat("namespace {0}", string.IsNullOrEmpty(nameSpace) ? "Entities" : nameSpace);
             sb.AppendLine();
-            sb.AppendLine("{");
 
-
-            Dictionary<string, TableInfo> dict = DBMetadataHelper.GetTableInfo();
-
-            foreach (var item in dict)
-            {
-                Console.WriteLine();
-                Console.Write("开始生成表：{0}......", item.Key);
-                sb.AppendLine(BuildClass(item.Value));
-                Console.Write("......成功");
-            }
-            Console.WriteLine();
-            sb.AppendLine("}");
-
+            return sb.ToString();
+        }
+       
+        private void SaveToFile(string content, string fileName)
+        {
             //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Entities");
-            string path = GeneratorOption.Instance.EntityDirectory;
+            string path = GeneratorOptions.Instance.EntityDirectory;
             if (string.IsNullOrEmpty(path))
             {
                 path = AppDomain.CurrentDomain.BaseDirectory;
             }
-            string fileName = "Entities.cs";
 
             if (File.Exists(Path.Combine(path, fileName)))
             {
                 File.Delete(Path.Combine(path, fileName));
             }
 
-            BuilderUtils.CreateFile(path, fileName, sb.ToString());
+            BuilderUtils.CreateFile(path, fileName, content);
         }
 
         protected abstract string BuildClass(TableInfo table);

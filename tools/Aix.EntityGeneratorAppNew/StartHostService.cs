@@ -1,5 +1,6 @@
 ﻿using Aix.EntityGenerator;
-using Aix.EntityGenerator.Builder;
+using Aix.EntityGeneratorNew;
+using Aix.EntityGeneratorNew.Builder;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,15 @@ namespace Aix.EntityGeneratorApp
 {
     public class StartHostService : IHostedService
     {
+        GeneratorOptions _generatorOptions;
+
+
+        public StartHostService(GeneratorOptions generatorOptions)
+        {
+            _generatorOptions = generatorOptions;
+        }
+
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
@@ -26,9 +36,9 @@ namespace Aix.EntityGeneratorApp
             return Task.CompletedTask;
         }
 
-        static void Start()
+        void Start()
         {
-            string namesapce = GeneratorOption.Instance.NameSapce;
+            string namesapce = _generatorOptions.NameSapce;
             if (string.IsNullOrEmpty(namesapce))
             {
                 Console.WriteLine("请在配置文件中配置命名空间，如：<add key =\"namesapce\" value=\"My.ORMTest\"/>");
@@ -46,14 +56,9 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine();
                 string type = Console.ReadLine();
 
-                IEntityBuilder builder = null;
-                if (type == "1")
+                IEntityBuilder builder = CreateBulder(type);
+                if (builder != null)
                 {
-                    builder = new DefaultBuilder();
-                }
-                else if (type == "2")
-                {
-                    builder = new ORMBuilder();
                 }
                 else if (type == "q")
                 {
@@ -67,7 +72,11 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine("开始生成......");
                 WithException(() =>
                 {
-                    builder.Builder(namesapce);
+                    foreach (var item in _generatorOptions.Databases)
+                    {
+                        builder.Builder(item.DBtype, item.ConnectionStrings);
+                    }
+                    
                 });
                 Console.WriteLine();
                 Console.WriteLine("生成成功......");
@@ -75,6 +84,29 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine();
                 Console.WriteLine();
             }
+        }
+
+        private IEntityBuilder CreateBulder(string type)
+        {
+            IEntityBuilder builder = null;
+            if (type == "1")
+            {
+                builder = new DefaultBuilder();
+            }
+            else if (type == "2")
+            {
+                builder = new ORMBuilder();
+            }
+
+            if (builder != null)
+            {
+                if (_generatorOptions.MultipleFiles)
+                    builder = new SaveToMultipleFileBuilder(builder);
+                else
+                    builder = new SaveToSingleFileBuilder(builder);
+            }
+
+            return builder;
         }
 
         static void WithException(Action action)

@@ -20,7 +20,14 @@ namespace Aix.ORM
             Param = paras;
         }
 
+        /// <summary>
+        /// 执行的sql语句
+        /// </summary>
         public string Sql { get; }
+
+        /// <summary>
+        /// 执行sql的参数对象
+        /// </summary>
         public object Param { get; }
 
         public void Dispose()
@@ -39,15 +46,13 @@ namespace Aix.ORM
         /// </summary>
         public virtual void ExecuteEnd() { }
 
-        #endregion
-
-
         /// <summary>
         /// sql执行发生异常时触发
         /// </summary>
         /// <param name="ex"></param>
         public virtual void ExecuteException(Exception ex) { }
 
+        #endregion
     }
 
     public class DefaultSqlExecuteTrace : AbstractSqlExecuteTrace

@@ -5,9 +5,19 @@ using System.Text;
 
 namespace Aix.ORM
 {
+    /// <summary>
+    /// 实体基类
+    /// </summary>
     public abstract class BaseEntity
     {
+        /// <summary>
+        /// 发生变化的属性 (进行了赋值的)
+        /// </summary>
         private List<string> _PropertyChangedList = new List<string>();
+
+        /// <summary>
+        /// 修改时 是否修改案全部字段  false=只修改赋值的字段 false=修改所有字段  默认false
+        /// </summary>
         private bool _fullUpdate = false;//默认不更新全部
 
         public bool FullUpdate

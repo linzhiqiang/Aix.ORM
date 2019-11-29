@@ -6,31 +6,31 @@ using System.Text;
 
 namespace Aix.EntityGenerator.Factory
 {
-   public class DBObjectFactoryFactory
+    public class DBObjectFactoryFactory
     {
         public static DBObjectFactoryFactory Instance = new DBObjectFactoryFactory();
         private DBObjectFactoryFactory() { }
 
 
-        private IDBObjectFactory DBFactory { get; set; }
+        private Dictionary<ORMDBType, IDBObjectFactory> Cache = new Dictionary<ORMDBType, IDBObjectFactory>();
         private object SynLock = new object();
         public IDBObjectFactory GetDBObjectFactory()
         {
-            if (DBFactory == null)
+            ORMDBType dbType = GeneratorOptions.Instance.DBtype;
+            if (!Cache.ContainsKey(dbType))
             {
                 lock (SynLock)
                 {
-                    if (DBFactory == null)
+                    if (!Cache.ContainsKey(dbType))
                     {
-                        ORMDBType dbType = GeneratorOption.Instance.DBtype;
-
+                        
                         if (dbType == ORMDBType.MySql)
                         {
-                            DBFactory= new MysqlObjectFactory();
+                            Cache.Add(dbType, new MysqlObjectFactory());
                         }
                         else if (dbType == ORMDBType.MsSql)
                         {
-                            DBFactory= new SqlServerObjectFactory();
+                            Cache.Add(dbType, new SqlServerObjectFactory());
                         }
                         else
                         {
@@ -40,10 +40,10 @@ namespace Aix.EntityGenerator.Factory
                 }
             }
 
-            return DBFactory;
+            return Cache[dbType];
 
 
-            
+
         }
     }
 }

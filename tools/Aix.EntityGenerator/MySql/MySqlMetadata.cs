@@ -14,7 +14,7 @@ namespace Aix.EntityGenerator.MySql
         {
             get
             {
-                return GeneratorOption.Instance.Maindb;
+                return GeneratorOptions.Instance.Maindb;
             }
         }
 
