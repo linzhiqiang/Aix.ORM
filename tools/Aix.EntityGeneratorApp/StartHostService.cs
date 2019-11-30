@@ -1,6 +1,7 @@
 ﻿using Aix.EntityGenerator;
 using Aix.EntityGenerator.Builder;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,19 @@ namespace Aix.EntityGeneratorApp
 {
     public class StartHostService : IHostedService
     {
+         ILogger<StartHostService> _logger;
+        GeneratorOptions _generatorOptions;
+        IBuilderFactory _builderFactory;
+
+        public StartHostService(ILogger<StartHostService>  logger,GeneratorOptions generatorOptions
+            , IBuilderFactory builderFactory)
+        {
+            _logger = logger;
+            _generatorOptions = generatorOptions;
+            _builderFactory = builderFactory;
+        }
+
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Run(async () =>
@@ -26,9 +40,9 @@ namespace Aix.EntityGeneratorApp
             return Task.CompletedTask;
         }
 
-        static void Start()
+        void Start()
         {
-            string namesapce = GeneratorOptions.Instance.NameSapce;
+            string namesapce = _generatorOptions.NameSapce;
             if (string.IsNullOrEmpty(namesapce))
             {
                 Console.WriteLine("请在配置文件中配置命名空间，如：<add key =\"namesapce\" value=\"My.ORMTest\"/>");
@@ -46,14 +60,9 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine();
                 string type = Console.ReadLine();
 
-                IEntityBuilder builder = null;
-                if (type == "1")
+                IEntityBuilder builder = _builderFactory.GetEntityBuilder(type);
+                if (builder != null)
                 {
-                    builder = new DefaultBuilder();
-                }
-                else if (type == "2")
-                {
-                    builder = new ORMBuilder();
                 }
                 else if (type == "q")
                 {
@@ -67,15 +76,19 @@ namespace Aix.EntityGeneratorApp
                 Console.WriteLine("开始生成......");
                 WithException(() =>
                 {
-                    builder.Builder(namesapce);
+                    foreach (var item in _generatorOptions.Databases)
+                    {
+                        builder.Builder(item.DBtype, item.ConnectionStrings);
+                    }
+                    
                 });
-                Console.WriteLine();
                 Console.WriteLine("生成成功......");
 
                 Console.WriteLine();
                 Console.WriteLine();
             }
         }
+
 
         static void WithException(Action action)
         {

@@ -1,22 +1,27 @@
-﻿using Aix.EntityGenerator.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using Aix.EntityGenerator.Entity;
+using Aix.EntityGenerator.Utils;
+using Aix.ORM.Common;
 
 namespace Aix.EntityGenerator.Builder
 {
-    public class ORMBuilder : BaseEntityBuilder
+  public   class ORMBuilder: BaseEntityBuilder
     {
-        protected override string BuildClass(TableInfo table)
+        public ORMBuilder(IServiceProvider serviceProvider, ISaveToFile  saveToFile) : base(serviceProvider, saveToFile)
+        {
+
+        }
+        public override  string BuildClass(ORMDBType dbType, TableInfo table)
         {
             StringBuilder sb = new StringBuilder();
             int space = 4;
-
+            var dataTypeConvert = DBObjectFactoryFactory.Instance.GetDBObjectFactory(dbType).GetDataTypeConvert();
             // 注释
             sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space));
             sb.AppendLine();
-            sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space), RemoveNewLine(table.TableComment));
+            sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space), Helper.RemoveNewLine(table.TableComment));
             sb.AppendLine();
             sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space));
             sb.AppendLine();
@@ -25,7 +30,7 @@ namespace Aix.EntityGenerator.Builder
             string baseEntityName = "BaseEntity";
             sb.AppendFormat("{0}[Table(\"{1}\")]", BuilderUtils.BuildSpace(space), table.TableName);
             sb.AppendLine();
-            sb.AppendFormat("{0}public partial class {1} : {2}", BuilderUtils.BuildSpace(space), GetClassName(table.TableName), baseEntityName);
+            sb.AppendFormat("{0}public partial class {1} : {2}", BuilderUtils.BuildSpace(space), Helper.GetClassName(table.TableName), baseEntityName);
             sb.AppendLine();
             sb.AppendFormat("{0}{{", BuilderUtils.BuildSpace(space));
             sb.AppendLine();
@@ -33,7 +38,7 @@ namespace Aix.EntityGenerator.Builder
             //私有字段
             foreach (var item in table.Columns)
             {
-                string dateType = DataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
+                string dateType = dataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
                 sb.AppendFormat("{0}private {1} {2}; ", BuilderUtils.BuildSpace(space + 4), dateType, GetFieldName(item.ColumnName));
                 sb.AppendLine();
             }
@@ -44,7 +49,7 @@ namespace Aix.EntityGenerator.Builder
             {
                 sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
-                sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space + 4), RemoveNewLine(item.ColumnComment));
+                sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space + 4), Helper.RemoveNewLine(item.ColumnComment));
                 sb.AppendLine();
                 sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
@@ -66,8 +71,8 @@ namespace Aix.EntityGenerator.Builder
                 }
 
 
-                string dateType = DataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
-                sb.AppendFormat("{0}public {1} {2}", BuilderUtils.BuildSpace(space + 4), dateType, GetPropertyName(item.ColumnName));
+                string dateType = dataTypeConvert.ConvertDataType(item.DataType, item.ColumnIsNullable());
+                sb.AppendFormat("{0}public {1} {2}", BuilderUtils.BuildSpace(space + 4), dateType, Helper.GetPropertyName(item.ColumnName));
                 sb.AppendLine();
 
                 sb.AppendFormat("{0}{{", BuilderUtils.BuildSpace(space + 4));
@@ -94,9 +99,5 @@ namespace Aix.EntityGenerator.Builder
         {
             return string.Format("_{0}", char.ToLower(columnName[0]) + (columnName.Length > 1 ? columnName.Substring(1) : ""));
         }
-
-
-
-
     }
 }

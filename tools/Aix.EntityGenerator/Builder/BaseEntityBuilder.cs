@@ -1,64 +1,59 @@
-﻿using Aix.EntityGenerator.Entity;
-using Aix.EntityGenerator.Factory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Aix.EntityGenerator.Entity;
+using Aix.ORM.Common;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Aix.EntityGenerator.Builder
 {
     public abstract class BaseEntityBuilder : IEntityBuilder
     {
-        protected IDataTypeConvert DataTypeConvert = DBObjectFactoryFactory.Instance.GetDBObjectFactory().GetDataTypeConvert();
-
-        public void Builder(string nameSpace)
+        protected readonly IServiceProvider _serviceProvider;
+        protected GeneratorOptions _generatorOptions;
+        protected ILogger<BaseEntityBuilder> _logger;
+        private ISaveToFile _saveToFile;
+        public BaseEntityBuilder(IServiceProvider serviceProvider,ISaveToFile saveToFile)
         {
-            if (GeneratorOptions.Instance.MultipleFiles == false)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(GetFileHeader(nameSpace));
-                sb.AppendLine("{");
-
-                Dictionary<string, TableInfo> dict = DBMetadataHelper.GetTableInfo();
-
-                foreach (var item in dict)
-                {
-                    Console.WriteLine();
-                    Console.Write("开始生成表：{0}......", item.Key);
-                    sb.AppendLine(BuildClass(item.Value));
-                    Console.Write("......成功");
-                }
-                sb.AppendLine("}");
-
-                SaveToFile(sb.ToString(), "Entities.cs");
-            }
-            else
-            {
-                Dictionary<string, TableInfo> dict = DBMetadataHelper.GetTableInfo();
-
-                foreach (var item in dict)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(GetFileHeader(nameSpace));
-                    sb.AppendLine("{");
-
-                    Console.WriteLine();
-                    Console.Write("开始生成表：{0}......", item.Key);
-                    sb.AppendLine(BuildClass(item.Value));
-                    Console.Write("......成功");
-                    sb.AppendLine("}");
-
-                    SaveToFile(sb.ToString(), $"{GetClassName(item.Key)}.cs");
-
-                }
-
-            }
+            _serviceProvider = serviceProvider;
+            _generatorOptions = _serviceProvider.GetService<GeneratorOptions>();
+            _logger = _serviceProvider.GetService<ILogger<BaseEntityBuilder>>();
+            _saveToFile = saveToFile;
         }
 
-        private string GetFileHeader(string nameSpace)
+        public void Builder(ORMDBType dbType, string connectionStrings)
+        {
+            var metadatas = DBMetadataHelper.GetTableInfo(dbType, connectionStrings);
+
+            List<ClassBuilderInfo> classInfos = new List<ClassBuilderInfo>();
+            foreach (var item in metadatas.TableInfos)
+            {
+                _logger.LogInformation("开始生成表：{0}......", item.TableName);
+                var classString = BuildClass(dbType, item);
+                classInfos.Add(new ClassBuilderInfo { ClassString = classString, TableInfo = item });
+                _logger.LogInformation("......成功");
+            }
+            var result = new BuilderResult
+            {
+                Header = BuilderHead(),
+                DBName = metadatas.DBName,
+                ClassInfos = classInfos
+            };
+
+            _saveToFile.Save(result);
+        }
+
+        public abstract string BuildClass(ORMDBType dbType, TableInfo table);
+
+        #region private 
+        private string BuilderHead()
         {
             StringBuilder sb = new StringBuilder();
+
+            var nameSpace = _generatorOptions.NameSapce;
 
             sb.AppendLine("/*");
             sb.AppendLine("该文件为自动生成，不要修改。");
@@ -73,100 +68,12 @@ namespace Aix.EntityGenerator.Builder
             sb.AppendLine("using Aix.ORM;");
             sb.AppendLine();
             sb.AppendFormat("namespace {0}", string.IsNullOrEmpty(nameSpace) ? "Entities" : nameSpace);
-            sb.AppendLine();
 
             return sb.ToString();
         }
-       
-        private void SaveToFile(string content, string fileName)
-        {
-            //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Entities");
-            string path = GeneratorOptions.Instance.EntityDirectory;
-            if (string.IsNullOrEmpty(path))
-            {
-                path = AppDomain.CurrentDomain.BaseDirectory;
-            }
 
-            if (File.Exists(Path.Combine(path, fileName)))
-            {
-                File.Delete(Path.Combine(path, fileName));
-            }
+        #endregion
 
-            BuilderUtils.CreateFile(path, fileName, content);
-        }
 
-        protected abstract string BuildClass(TableInfo table);
-
-        protected string GetClassName(string tableName)
-        {
-            return UnderLineToCamel(tableName);
-        }
-
-        protected string GetPropertyName(string columnName)
-        {
-            //下划线转驼峰
-            return UnderLineToCamel(columnName);
-        }
-
-        protected string UnderLineToCamel(string str)
-        {
-            if (string.IsNullOrEmpty(str)) return str;
-            if (str.Contains("_"))
-            {
-                var ss = str.Split('_').Where(_item => _item.Trim().Length > 0).Select(item => FirstLetterToUpper(item));
-                return string.Join("", ss.ToArray());
-            }
-
-            if (str.Length == 1)
-            {
-                return char.ToUpper(str[0]).ToString();
-            }
-            else
-            {
-                return char.ToUpper(str[0]) + str.Substring(1);
-            }
-        }
-
-        protected string UnderLineToCamel2(string str)
-        {
-            if (string.IsNullOrEmpty(str)) return str;
-
-            if (!str.Contains("_"))
-            {
-                return FirstLetterToUpper(str);
-            }
-
-            var array = str.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder sb = new StringBuilder();
-            foreach (var item in array)
-            {
-                sb.Append(FirstLetterToUpper(item));
-            }
-            return sb.ToString();
-        }
-
-        private string FirstLetterToUpper(string str)
-        {
-            if (!string.IsNullOrEmpty(str))
-            {
-                if (str.Length == 1)
-                {
-                    return str[0].ToString().ToUpper();
-                }
-                else
-                {
-                    return $"{char.ToUpper(str[0])}{str.Substring(1)}";
-                }
-
-            }
-
-            return str;
-        }
-
-        protected string RemoveNewLine(string content)
-        {
-            //return   content.Replace(Environment.NewLine, Environment.NewLine+"///");
-            return content?.Replace(Environment.NewLine, "");
-        }
     }
 }

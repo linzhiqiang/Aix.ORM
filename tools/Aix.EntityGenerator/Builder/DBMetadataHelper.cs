@@ -1,33 +1,26 @@
 ﻿using Aix.EntityGenerator.Entity;
-using Aix.EntityGenerator.Factory;
+using Aix.EntityGenerator.Metadata;
 using Aix.ORM.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Linq;
 
 namespace Aix.EntityGenerator.Builder
 {
     public static class DBMetadataHelper
     {
-        public static Dictionary<string, TableInfo> GetTableInfo()
-        {
-            // 
-            return GetTableInfo(GeneratorOptions.Instance.DBtype, GeneratorOptions.Instance.Maindb);
-        }
-        public static Dictionary<string, TableInfo> GetTableInfo(ORMDBType dbType,string connectionString)
+        public static DBMetadataDTO GetTableInfo(ORMDBType dbType, string connectionString)
         {
             Dictionary<string, TableInfo> dict = new Dictionary<string, TableInfo>();
-           
-
-            IDBMetadata dBMetadata = DBObjectFactoryFactory.Instance.GetDBObjectFactory().GetDBMetadata();
+            IDBMetadata dBMetadata = DBObjectFactoryFactory.Instance.GetDBObjectFactory(dbType).GetDBMetadata(connectionString);
 
             string dbName = dBMetadata.GetDBName();
-            List<TableInfo> tables = dBMetadata.QueryTable(dbName);
+            List<TableInfo> tables = dBMetadata.QueryTable();
 
-            List<ColumnInfo> columns = dBMetadata.QueryColumn(dbName);
+            List<ColumnInfo> columns = dBMetadata.QueryColumn();
 
-            List<PrimaryKey> primaryKeys = dBMetadata.QueryPrimaryKey(dbName);
+            List<PrimaryKey> primaryKeys = dBMetadata.QueryPrimaryKey();
 
             foreach (var item in tables)
             {
@@ -50,9 +43,10 @@ namespace Aix.EntityGenerator.Builder
                 dict[tableName].PrimaryKeys.Add(item);
             }
 
-            return dict;
-
-
+            return new DBMetadataDTO {
+                DBName = dbName,
+                TableInfos = dict.Values.ToList()
+            };
         }
     }
 }

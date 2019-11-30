@@ -1,22 +1,20 @@
-﻿using Aix.EntityGenerator.SqlServer;
+﻿using Aix.EntityGenerator.Metadata;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace Aix.EntityGenerator.Factory
+namespace Aix.EntityGenerator
 {
-   public class SqlServerObjectFactory: IDBObjectFactory
+    public class SqlServerObjectFactory : IDBObjectFactory
     {
-        public IDBMetadata GetDBMetadata( )
+        public IDBMetadata GetDBMetadata(string connectionStrings)
         {
-            return new SqlServerMetadata();
+            return new SqlServerMetadata(connectionStrings);
         }
 
         public IDataTypeConvert GetDataTypeConvert()
         {
             return new SqlServerDataTypeConvert();
         }
-      
     }
 }

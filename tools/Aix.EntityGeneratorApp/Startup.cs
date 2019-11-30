@@ -10,10 +10,7 @@ namespace Aix.EntityGeneratorApp
         internal static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             var option = context.Configuration.GetSection("generator").Get<GeneratorOptions>();
-            GeneratorOptions.Instance = option;
-
-            //ConnectionFactory.Instance.DefaultFactory = new MsSqlConnectionFactory();
-            //services.AddSingleton<IConfigService, ConfigService>();
+            services.AddEntityGenerator(option);
             services.AddHostedService<StartHostService>();
         }
     }

@@ -1,16 +1,15 @@
-﻿using Aix.EntityGenerator.MySql;
+﻿using Aix.EntityGenerator.Metadata;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace Aix.EntityGenerator.Factory
+namespace Aix.EntityGenerator
 {
-   public class MysqlObjectFactory: IDBObjectFactory
+    public class MysqlObjectFactory : IDBObjectFactory
     {
-        public IDBMetadata GetDBMetadata()
+        public IDBMetadata GetDBMetadata(string connectionStrings)
         {
-            return new MySqlMetadata();
+            return new MySqlMetadata(connectionStrings);
         }
 
         public IDataTypeConvert GetDataTypeConvert()
@@ -18,6 +17,5 @@ namespace Aix.EntityGenerator.Factory
             return new MySqlDataTypeConvert();
         }
 
-       
     }
 }

@@ -1,10 +1,9 @@
 ﻿using Aix.ORM.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace Aix.EntityGenerator.Factory
+namespace Aix.EntityGenerator
 {
     public class DBObjectFactoryFactory
     {
@@ -14,16 +13,15 @@ namespace Aix.EntityGenerator.Factory
 
         private Dictionary<ORMDBType, IDBObjectFactory> Cache = new Dictionary<ORMDBType, IDBObjectFactory>();
         private object SynLock = new object();
-        public IDBObjectFactory GetDBObjectFactory()
+        public IDBObjectFactory GetDBObjectFactory(ORMDBType dbType)
         {
-            ORMDBType dbType = GeneratorOptions.Instance.DBtype;
             if (!Cache.ContainsKey(dbType))
             {
                 lock (SynLock)
                 {
                     if (!Cache.ContainsKey(dbType))
                     {
-                        
+
                         if (dbType == ORMDBType.MySql)
                         {
                             Cache.Add(dbType, new MysqlObjectFactory());

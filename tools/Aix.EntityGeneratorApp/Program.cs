@@ -2,6 +2,7 @@
 using Aix.ORM.DBConnectionManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -27,7 +28,8 @@ namespace Aix.EntityGeneratorApp
                   })
                 .ConfigureLogging((context, factory) =>
                 {
-
+                    factory.AddConsole();
+                    factory.SetMinimumLevel(LogLevel.Information);
                 })
                 .ConfigureServices(Startup.ConfigureServices);
 
