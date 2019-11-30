@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Aix.EntityGenerator.Builder
 {
@@ -9,27 +10,28 @@ namespace Aix.EntityGenerator.Builder
         private readonly  IServiceProvider _serviceProvider;
         private readonly GeneratorOptions _options;
         private readonly SaveToFileFactory _saveToFileFactory;
-        //private readonly IEnumerable<IEntityBuilder> _builders;
+        private readonly IEnumerable<IEntityBuilder> _builders;
         public BuilderFactory(
             IServiceProvider serviceProvider
             , GeneratorOptions options
+            , IEnumerable<IEntityBuilder> builders
             , SaveToFileFactory saveToFileFactory)
         {
             _serviceProvider = serviceProvider;
             _options = options;
+            _builders = builders;
             _saveToFileFactory = saveToFileFactory;
         }
         public IEntityBuilder GetEntityBuilder(string type)
         {
             IEntityBuilder builder = null;
-            var saveToFile = _saveToFileFactory.GetSaveToFile();
             if (type == "1")
             {
-                builder = new DefaultBuilder(_serviceProvider,saveToFile);
+                builder = _builders.FirstOrDefault(x=>x.GetType()==typeof(DefaultBuilder));
             }
             else if (type == "2")
             {
-                builder = new ORMBuilder(_serviceProvider,saveToFile);
+                builder = _builders.FirstOrDefault(x => x.GetType() == typeof(ORMBuilder));
             }
 
             return builder;

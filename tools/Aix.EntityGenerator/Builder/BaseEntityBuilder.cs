@@ -13,15 +13,17 @@ namespace Aix.EntityGenerator.Builder
     public abstract class BaseEntityBuilder : IEntityBuilder
     {
         protected readonly IServiceProvider _serviceProvider;
-        protected GeneratorOptions _generatorOptions;
+        protected GeneratorOptions _options;
         protected ILogger<BaseEntityBuilder> _logger;
-        private ISaveToFile _saveToFile;
-        public BaseEntityBuilder(IServiceProvider serviceProvider,ISaveToFile saveToFile)
+        private SaveToFileFactory _saveToFileFactory;
+        public BaseEntityBuilder(IServiceProvider serviceProvider
+            , GeneratorOptions options
+            , SaveToFileFactory saveToFileFactory)
         {
             _serviceProvider = serviceProvider;
-            _generatorOptions = _serviceProvider.GetService<GeneratorOptions>();
-            _logger = _serviceProvider.GetService<ILogger<BaseEntityBuilder>>();
-            _saveToFile = saveToFile;
+            _options = options;
+            _logger = serviceProvider.GetService<ILogger<BaseEntityBuilder>>();
+            _saveToFileFactory = saveToFileFactory;
         }
 
         public void Builder(ORMDBType dbType, string connectionStrings)
@@ -43,7 +45,8 @@ namespace Aix.EntityGenerator.Builder
                 ClassInfos = classInfos
             };
 
-            _saveToFile.Save(result);
+            var saveToFile = _saveToFileFactory.GetSaveToFile();
+            saveToFile.Save(result);
         }
 
         public abstract string BuildClass(ORMDBType dbType, TableInfo table);
@@ -53,7 +56,7 @@ namespace Aix.EntityGenerator.Builder
         {
             StringBuilder sb = new StringBuilder();
 
-            var nameSpace = _generatorOptions.NameSapce;
+            var nameSpace = _options.NameSapce;
 
             sb.AppendLine("/*");
             sb.AppendLine("该文件为自动生成，不要修改。");

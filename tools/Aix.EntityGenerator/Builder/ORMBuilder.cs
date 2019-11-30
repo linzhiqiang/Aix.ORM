@@ -9,7 +9,8 @@ namespace Aix.EntityGenerator.Builder
 {
   public   class ORMBuilder: BaseEntityBuilder
     {
-        public ORMBuilder(IServiceProvider serviceProvider, ISaveToFile  saveToFile) : base(serviceProvider, saveToFile)
+        public ORMBuilder(IServiceProvider serviceProvider, GeneratorOptions options, SaveToFileFactory saveToFileFactory)
+            : base(serviceProvider, options,saveToFileFactory)
         {
 
         }

@@ -17,6 +17,8 @@ namespace Aix.EntityGenerator
             services.AddSingleton<ISaveToFile, SaveToMultipleFile>();
             services.AddSingleton<SaveToFileFactory>();
 
+            services.AddSingleton<IEntityBuilder, DefaultBuilder>();
+            services.AddSingleton<IEntityBuilder, ORMBuilder>();
             services.AddSingleton<IBuilderFactory, BuilderFactory>();
             return services;
         }
