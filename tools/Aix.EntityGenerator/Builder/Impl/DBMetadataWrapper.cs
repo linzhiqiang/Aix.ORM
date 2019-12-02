@@ -8,12 +8,17 @@ using System.Linq;
 
 namespace Aix.EntityGenerator.Builder
 {
-    public static class DBMetadataHelper
+    public  class DBMetadataWrapper
     {
-        public static DBMetadataDTO GetTableInfo(ORMDBType dbType, string connectionString)
+        private DBObjectFactoryFactory _dBObjectFactoryFactory;
+        public DBMetadataWrapper(DBObjectFactoryFactory dBObjectFactoryFactory)
+        {
+            _dBObjectFactoryFactory = dBObjectFactoryFactory;
+        }
+        public  DBMetadataDTO GetTableInfo(ORMDBType dbType, string connectionString)
         {
             Dictionary<string, TableInfo> dict = new Dictionary<string, TableInfo>();
-            IDBMetadata dBMetadata = DBObjectFactoryFactory.Instance.GetDBObjectFactory(dbType).GetDBMetadata(connectionString);
+            IDBMetadata dBMetadata = _dBObjectFactoryFactory.GetDBObjectFactory(dbType).GetDBMetadata(connectionString);
 
             string dbName = dBMetadata.GetDBName();
             List<TableInfo> tables = dBMetadata.QueryTable();

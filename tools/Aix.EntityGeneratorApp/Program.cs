@@ -18,7 +18,7 @@ namespace Aix.EntityGeneratorApp
             var host = new HostBuilder()
                 .ConfigureHostConfiguration(builder =>
                 {
-                    builder.AddEnvironmentVariables(prefix: "Demo_");
+                    builder.AddEnvironmentVariables(prefix: "EntityGenerator_");
                 })
                  .ConfigureAppConfiguration((hostContext, config) =>
                  {

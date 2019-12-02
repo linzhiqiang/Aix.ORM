@@ -7,14 +7,14 @@ using Aix.ORM.Common;
 
 namespace Aix.EntityGenerator.Builder
 {
-  public   class ORMBuilder: BaseEntityBuilder
+    public class ORMBuilder : BaseEntityBuilder
     {
-        public ORMBuilder(IServiceProvider serviceProvider, GeneratorOptions options, SaveToFileFactory saveToFileFactory)
-            : base(serviceProvider, options,saveToFileFactory)
+        public ORMBuilder(IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
 
         }
-        public override  string BuildClass(ORMDBType dbType, TableInfo table)
+        public override string BuildClass(ORMDBType dbType, TableInfo table)
         {
             StringBuilder sb = new StringBuilder();
             int space = 4;

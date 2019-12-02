@@ -15,20 +15,20 @@ namespace Aix.EntityGenerator.Builder
         protected readonly IServiceProvider _serviceProvider;
         protected GeneratorOptions _options;
         protected ILogger<BaseEntityBuilder> _logger;
-        private SaveToFileFactory _saveToFileFactory;
-        public BaseEntityBuilder(IServiceProvider serviceProvider
-            , GeneratorOptions options
-            , SaveToFileFactory saveToFileFactory)
+        private ISaveToFileFactory _saveToFileFactory;
+        private DBMetadataWrapper _dBMetadataWrapper;
+        public BaseEntityBuilder(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _options = options;
+            _options = serviceProvider.GetService<GeneratorOptions>();
             _logger = serviceProvider.GetService<ILogger<BaseEntityBuilder>>();
-            _saveToFileFactory = saveToFileFactory;
+            _saveToFileFactory = serviceProvider.GetService<ISaveToFileFactory>();
+            _dBMetadataWrapper = serviceProvider.GetService<DBMetadataWrapper>();
         }
 
         public void Builder(ORMDBType dbType, string connectionStrings)
         {
-            var metadatas = DBMetadataHelper.GetTableInfo(dbType, connectionStrings);
+            var metadatas = _dBMetadataWrapper.GetTableInfo(dbType, connectionStrings);
 
             List<ClassBuilderInfo> classInfos = new List<ClassBuilderInfo>();
             foreach (var item in metadatas.TableInfos)
@@ -45,7 +45,7 @@ namespace Aix.EntityGenerator.Builder
                 ClassInfos = classInfos
             };
 
-            var saveToFile = _saveToFileFactory.GetSaveToFile();
+            var saveToFile = _saveToFileFactory.GetSaveToFile(_options.MultipleFiles);
             saveToFile.Save(result);
         }
 

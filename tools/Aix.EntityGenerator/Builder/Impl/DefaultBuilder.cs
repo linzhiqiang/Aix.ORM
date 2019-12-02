@@ -9,8 +9,8 @@ namespace Aix.EntityGenerator.Builder
 {
     public class DefaultBuilder : BaseEntityBuilder
     {
-        public DefaultBuilder(IServiceProvider serviceProvider, GeneratorOptions options, SaveToFileFactory saveToFileFactory)
-            :base(serviceProvider, options,saveToFileFactory)
+        public DefaultBuilder(IServiceProvider serviceProvider)
+            :base(serviceProvider)
         { 
         
         }

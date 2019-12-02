@@ -15,11 +15,14 @@ namespace Aix.EntityGenerator
 
             services.AddSingleton<ISaveToFile, SaveToSingleFile>();
             services.AddSingleton<ISaveToFile, SaveToMultipleFile>();
-            services.AddSingleton<SaveToFileFactory>();
+            services.AddSingleton<ISaveToFileFactory,SaveToFileFactory>();
 
             services.AddSingleton<IEntityBuilder, DefaultBuilder>();
             services.AddSingleton<IEntityBuilder, ORMBuilder>();
             services.AddSingleton<IBuilderFactory, BuilderFactory>();
+
+            services.AddSingleton<DBMetadataWrapper>();
+            services.AddSingleton(DBObjectFactoryFactory.Instance);
             return services;
         }
     }

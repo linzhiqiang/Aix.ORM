@@ -5,21 +5,19 @@ using System.Linq;
 
 namespace Aix.EntityGenerator
 {
-    public class SaveToFileFactory
+    public class SaveToFileFactory : ISaveToFileFactory
     {
-        private readonly GeneratorOptions _options;
         private readonly IEnumerable<ISaveToFile> _saveToFiles;
 
-        public SaveToFileFactory(GeneratorOptions options, IEnumerable<ISaveToFile> saveToFiles)
+        public SaveToFileFactory(IEnumerable<ISaveToFile> saveToFiles)
         {
-            _options = options;
             _saveToFiles = saveToFiles;
         }
-        public ISaveToFile GetSaveToFile()
+        public ISaveToFile GetSaveToFile(bool multipleFiles)
         {
-            if (_options.MultipleFiles)
+            if (multipleFiles)
             {
-              return   _saveToFiles.FirstOrDefault(x => x.GetType() == typeof(SaveToMultipleFile));
+                return _saveToFiles.FirstOrDefault(x => x.GetType() == typeof(SaveToMultipleFile));
             }
             return _saveToFiles.FirstOrDefault(x => x.GetType() == typeof(SaveToSingleFile));
         }
