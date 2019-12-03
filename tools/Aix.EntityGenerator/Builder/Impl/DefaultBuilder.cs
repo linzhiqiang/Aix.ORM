@@ -18,7 +18,7 @@ namespace Aix.EntityGenerator.Builder
         {
             StringBuilder sb = new StringBuilder();
             int space = 4;
-            var dataTypeConvert = DBObjectFactoryFactory.Instance.GetDBObjectFactory(dbType).GetDataTypeConvert();
+            var dataTypeConvert = DBMetadataFactoryFactory.Instance.GetDBObjectFactory(dbType).GetDataTypeConvert();
 
             // 注释
             sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space));

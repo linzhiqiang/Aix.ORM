@@ -6,6 +6,6 @@ namespace Aix.ORMSample.Common
 {
     public static class ServiceLocator
     {
-        public static IServiceProvider Instance { get; set; }
+      //  public static IServiceProvider Instance { get; set; }
     }
 }

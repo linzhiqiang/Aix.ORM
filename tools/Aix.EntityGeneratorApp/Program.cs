@@ -41,7 +41,7 @@ namespace Aix.EntityGeneratorApp
         public static Task RunConsoleAsync(IHostBuilder hostBuilder, CancellationToken cancellationToken = default)
         {
             var host = hostBuilder.UseConsoleLifetime().Build();
-            ServiceLocator.Instance = host.Services;
+            
             return host.RunAsync(cancellationToken);
         }
 

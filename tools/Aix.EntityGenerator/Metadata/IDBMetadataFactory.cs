@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Aix.EntityGenerator
 {
-    public interface IDBObjectFactory
+    public interface IDBMetadataFactory
     {
         IDBMetadata GetDBMetadata(string connectionStrings);
         IDataTypeConvert GetDataTypeConvert();

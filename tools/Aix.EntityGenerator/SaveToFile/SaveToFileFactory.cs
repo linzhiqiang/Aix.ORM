@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Aix.EntityGenerator
 {
-    public class SaveToFileFactory : ISaveToFileFactory
+    public class SaveToFileFactory 
     {
         private readonly IEnumerable<ISaveToFile> _saveToFiles;
 

@@ -15,10 +15,10 @@ namespace Aix.EntityGeneratorApp
     {
          ILogger<StartHostService> _logger;
         GeneratorOptions _generatorOptions;
-        IBuilderFactory _builderFactory;
+        BuilderFactory _builderFactory;
 
         public StartHostService(ILogger<StartHostService>  logger,GeneratorOptions generatorOptions
-            , IBuilderFactory builderFactory)
+            , BuilderFactory builderFactory)
         {
             _logger = logger;
             _generatorOptions = generatorOptions;

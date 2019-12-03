@@ -6,23 +6,23 @@ using System.Text;
 
 namespace Aix.EntityGenerator
 {
-  public static  class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddEntityGenerator(this IServiceCollection services, GeneratorOptions options)
         {
-            
+
             services.AddSingleton(options);
 
             services.AddSingleton<ISaveToFile, SaveToSingleFile>();
             services.AddSingleton<ISaveToFile, SaveToMultipleFile>();
-            services.AddSingleton<ISaveToFileFactory,SaveToFileFactory>();
+            services.AddSingleton<SaveToFileFactory>();
 
             services.AddSingleton<IEntityBuilder, DefaultBuilder>();
             services.AddSingleton<IEntityBuilder, ORMBuilder>();
-            services.AddSingleton<IBuilderFactory, BuilderFactory>();
+            services.AddSingleton<BuilderFactory>();
 
             services.AddSingleton<DBMetadataWrapper>();
-            services.AddSingleton(DBObjectFactoryFactory.Instance);
+            services.AddSingleton(DBMetadataFactoryFactory.Instance);
             return services;
         }
     }

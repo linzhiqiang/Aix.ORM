@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Aix.EntityGenerator.Builder
 {
-    public class BuilderFactory: IBuilderFactory
+    public class BuilderFactory
     {
         private readonly  IServiceProvider _serviceProvider;
         private readonly IEnumerable<IEntityBuilder> _builders;

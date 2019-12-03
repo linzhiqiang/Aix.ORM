@@ -45,7 +45,7 @@ namespace Aix.ORMSample
         public static Task RunConsoleAsync(IHostBuilder hostBuilder, CancellationToken cancellationToken = default)
         {
             var host = hostBuilder.UseConsoleLifetime().Build();
-            ServiceLocator.Instance = host.Services;
+            //ServiceLocator.Instance = host.Services;
             return host.RunAsync(cancellationToken);
         }
     }

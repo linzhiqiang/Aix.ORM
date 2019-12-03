@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Aix.EntityGenerator
 {
-    public class DBObjectFactoryFactory
+    public class DBMetadataFactoryFactory
     {
-        public static DBObjectFactoryFactory Instance = new DBObjectFactoryFactory();
-        private DBObjectFactoryFactory() { }
+        public static DBMetadataFactoryFactory Instance = new DBMetadataFactoryFactory();
+        private DBMetadataFactoryFactory() { }
 
 
-        private Dictionary<ORMDBType, IDBObjectFactory> Cache = new Dictionary<ORMDBType, IDBObjectFactory>();
+        private Dictionary<ORMDBType, IDBMetadataFactory> Cache = new Dictionary<ORMDBType, IDBMetadataFactory>();
         private object SynLock = new object();
-        public IDBObjectFactory GetDBObjectFactory(ORMDBType dbType)
+        public IDBMetadataFactory GetDBObjectFactory(ORMDBType dbType)
         {
             if (!Cache.ContainsKey(dbType))
             {
@@ -24,11 +24,11 @@ namespace Aix.EntityGenerator
 
                         if (dbType == ORMDBType.MySql)
                         {
-                            Cache.Add(dbType, new MysqlObjectFactory());
+                            Cache.Add(dbType, new MysqlMetadataFactory());
                         }
                         else if (dbType == ORMDBType.MsSql)
                         {
-                            Cache.Add(dbType, new SqlServerObjectFactory());
+                            Cache.Add(dbType, new SqlServerMetadataFactory());
                         }
                         else
                         {

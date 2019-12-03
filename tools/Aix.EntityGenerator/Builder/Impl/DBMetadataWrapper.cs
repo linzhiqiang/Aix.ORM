@@ -10,8 +10,8 @@ namespace Aix.EntityGenerator.Builder
 {
     public  class DBMetadataWrapper
     {
-        private DBObjectFactoryFactory _dBObjectFactoryFactory;
-        public DBMetadataWrapper(DBObjectFactoryFactory dBObjectFactoryFactory)
+        private DBMetadataFactoryFactory _dBObjectFactoryFactory;
+        public DBMetadataWrapper(DBMetadataFactoryFactory dBObjectFactoryFactory)
         {
             _dBObjectFactoryFactory = dBObjectFactoryFactory;
         }

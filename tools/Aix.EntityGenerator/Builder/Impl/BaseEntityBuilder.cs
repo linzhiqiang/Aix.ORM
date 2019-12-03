@@ -15,14 +15,14 @@ namespace Aix.EntityGenerator.Builder
         protected readonly IServiceProvider _serviceProvider;
         protected GeneratorOptions _options;
         protected ILogger<BaseEntityBuilder> _logger;
-        private ISaveToFileFactory _saveToFileFactory;
+        private SaveToFileFactory _saveToFileFactory;
         private DBMetadataWrapper _dBMetadataWrapper;
         public BaseEntityBuilder(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _options = serviceProvider.GetService<GeneratorOptions>();
             _logger = serviceProvider.GetService<ILogger<BaseEntityBuilder>>();
-            _saveToFileFactory = serviceProvider.GetService<ISaveToFileFactory>();
+            _saveToFileFactory = serviceProvider.GetService<SaveToFileFactory>();
             _dBMetadataWrapper = serviceProvider.GetService<DBMetadataWrapper>();
         }
 

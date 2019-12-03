@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Aix.EntityGenerator
 {
-    public class SqlServerObjectFactory : IDBObjectFactory
+    public class SqlServerMetadataFactory : IDBMetadataFactory
     {
         public IDBMetadata GetDBMetadata(string connectionStrings)
         {
