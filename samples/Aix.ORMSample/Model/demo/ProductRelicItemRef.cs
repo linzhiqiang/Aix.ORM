@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using Aix.ORM;
 namespace Aix.ORMSample.Entity
 {
     /// <summary>
-    /// 
+    /// 商品和藏品关联信息表 商品和藏品关联信息表
     /// <summary>
     [Table("product_relic_item_ref")]
     public partial class ProductRelicItemRef : BaseEntity
@@ -23,9 +23,9 @@ namespace Aix.ORMSample.Entity
         private DateTime _modify_time; 
 
         /// <summary>
-        /// 编号
+        /// 编号  int(11)
         /// <summary>
-        [Column("id")]
+        [Column("id",IsNullable=false)]
         [PrimaryKey]
         [Identity]
         public int Id
@@ -34,36 +34,36 @@ namespace Aix.ORMSample.Entity
             set { _id = value; OnPropertyChanged("id"); }
         }
         /// <summary>
-        /// 商品ID
+        /// 商品ID  int(11)
         /// <summary>
-        [Column("product_id")]
+        [Column("product_id",IsNullable=false)]
         public int ProductId
         {
             get { return _product_id; }
             set { _product_id = value; OnPropertyChanged("product_id"); }
         }
         /// <summary>
-        /// 藏品ID
+        /// 藏品ID  int(11)
         /// <summary>
-        [Column("relic_id")]
+        [Column("relic_id",IsNullable=false)]
         public int RelicId
         {
             get { return _relic_id; }
             set { _relic_id = value; OnPropertyChanged("relic_id"); }
         }
         /// <summary>
-        /// 修改人编号
+        /// 修改人编号  varchar(50)
         /// <summary>
-        [Column("modifier_id")]
+        [Column("modifier_id",IsNullable=false)]
         public string ModifierId
         {
             get { return _modifier_id; }
             set { _modifier_id = value; OnPropertyChanged("modifier_id"); }
         }
         /// <summary>
-        /// 修改日期
+        /// 修改日期  datetime
         /// <summary>
-        [Column("modify_time")]
+        [Column("modify_time",IsNullable=false,DefaultValue="CURRENT_TIMESTAMP")]
         public DateTime ModifyTime
         {
             get { return _modify_time; }

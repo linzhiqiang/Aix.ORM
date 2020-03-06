@@ -25,6 +25,11 @@ namespace Aix.ORM
     public class ColumnAttribute : Attribute
     {
         public string ColumnName { get; set; }
+
+        public bool IsNullable { get; set; }
+
+        public string DefaultValue { get; set; }
+
         public ColumnAttribute(string column)
         {
             this.ColumnName = column;

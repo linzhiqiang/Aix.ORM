@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -25,9 +25,9 @@ namespace Aix.ORMSample.Entity
         private DateTime _update_time; 
 
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("app_id")]
+        [Column("app_id",IsNullable=false)]
         [PrimaryKey]
         [Identity]
         public int AppId
@@ -36,54 +36,54 @@ namespace Aix.ORMSample.Entity
             set { _app_id = value; OnPropertyChanged("app_id"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("app_code")]
+        [Column("app_code",IsNullable=false)]
         public string AppCode
         {
             get { return _app_code; }
             set { _app_code = value; OnPropertyChanged("app_code"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("app_name")]
+        [Column("app_name",IsNullable=false)]
         public string AppName
         {
             get { return _app_name; }
             set { _app_name = value; OnPropertyChanged("app_name"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("create_user")]
+        [Column("create_user",IsNullable=false)]
         public string CreateUser
         {
             get { return _create_user; }
             set { _create_user = value; OnPropertyChanged("create_user"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("update_user")]
+        [Column("update_user",IsNullable=false)]
         public string UpdateUser
         {
             get { return _update_user; }
             set { _update_user = value; OnPropertyChanged("update_user"); }
         }
         /// <summary>
-        /// 
+        ///   datetime
         /// <summary>
-        [Column("create_time")]
+        [Column("create_time",IsNullable=false)]
         public DateTime CreateTime
         {
             get { return _create_time; }
             set { _create_time = value; OnPropertyChanged("create_time"); }
         }
         /// <summary>
-        /// 
+        ///   datetime
         /// <summary>
-        [Column("update_time")]
+        [Column("update_time",IsNullable=false)]
         public DateTime UpdateTime
         {
             get { return _update_time; }

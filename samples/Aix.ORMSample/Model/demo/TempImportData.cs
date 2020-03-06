@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -20,18 +20,18 @@ namespace Aix.ORMSample.Entity
         private int _product_id; 
 
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("relic_id")]
+        [Column("relic_id",IsNullable=false)]
         public int RelicId
         {
             get { return _relic_id; }
             set { _relic_id = value; OnPropertyChanged("relic_id"); }
         }
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("product_id")]
+        [Column("product_id",IsNullable=false)]
         public int ProductId
         {
             get { return _product_id; }

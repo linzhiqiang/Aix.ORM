@@ -21,6 +21,18 @@ namespace Aix.EntityGenerator.Entity
 
         public string AutoIncrement { get; set; }
 
+        /// <summary>
+        /// 列的定义 如 mysql varchar(100) ,sqlserver和DataType一样
+        /// </summary>
+        public string ColumnType { get; set; }
+
+        /// <summary>
+        /// sqlserver 直接有，mysql需要从ColumnType中解析
+        /// </summary>
+        public int MaxLength { get; set; }
+
+        public string DefaultValue { get; set; }
+
         public bool IsAutoIncrement()
         {
             if (!string.IsNullOrEmpty(this.AutoIncrement))

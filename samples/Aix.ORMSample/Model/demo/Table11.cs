@@ -11,16 +11,16 @@ using Aix.ORM;
 namespace Aix.ORMSample.Entity
 {
     /// <summary>
-    /// 
+    /// 数据表11
     /// <summary>
-    [Table("test_sta")]
-    public partial class TestSta : BaseEntity
+    [Table("Table11")]
+    public partial class Table11 : BaseEntity
     {
         private int _id; 
-        private int _view_count; 
+        private string _name; 
 
         /// <summary>
-        ///   int(11)
+        /// 主键  int(11)
         /// <summary>
         [Column("id",IsNullable=false)]
         [PrimaryKey]
@@ -31,13 +31,13 @@ namespace Aix.ORMSample.Entity
             set { _id = value; OnPropertyChanged("id"); }
         }
         /// <summary>
-        ///   int(11)
+        /// 名称  varchar(50)
         /// <summary>
-        [Column("view_count",IsNullable=false)]
-        public int ViewCount
+        [Column("name",IsNullable=false)]
+        public string Name
         {
-            get { return _view_count; }
-            set { _view_count = value; OnPropertyChanged("view_count"); }
+            get { return _name; }
+            set { _name = value; OnPropertyChanged("name"); }
         }
     }
 

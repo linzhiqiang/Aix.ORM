@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -24,9 +24,9 @@ namespace Aix.ORMSample.Entity
         private DateTime _create_time; 
 
         /// <summary>
-        /// 编号
+        /// 编号  varchar(50)
         /// <summary>
-        [Column("id")]
+        [Column("id",IsNullable=false)]
         [PrimaryKey]
         public string Id
         {
@@ -34,45 +34,45 @@ namespace Aix.ORMSample.Entity
             set { _id = value; OnPropertyChanged("id"); }
         }
         /// <summary>
-        /// 藏品ID
+        /// 藏品ID  int(11)
         /// <summary>
-        [Column("relic_id")]
+        [Column("relic_id",IsNullable=false)]
         public int RelicId
         {
             get { return _relic_id; }
             set { _relic_id = value; OnPropertyChanged("relic_id"); }
         }
         /// <summary>
-        /// 封面图
+        /// 封面图  varchar(500)
         /// <summary>
-        [Column("cover_url")]
+        [Column("cover_url",IsNullable=true)]
         public string CoverUrl
         {
             get { return _cover_url; }
             set { _cover_url = value; OnPropertyChanged("cover_url"); }
         }
         /// <summary>
-        /// 资源地址
+        /// 资源地址  varchar(500)
         /// <summary>
-        [Column("media_url")]
+        [Column("media_url",IsNullable=true)]
         public string MediaUrl
         {
             get { return _media_url; }
             set { _media_url = value; OnPropertyChanged("media_url"); }
         }
         /// <summary>
-        /// 资源类型  1= 视频 2=3d模型
+        /// 资源类型  1= 视频 2=3d模型  tinyint(4)
         /// <summary>
-        [Column("media_type")]
+        [Column("media_type",IsNullable=true)]
         public sbyte? MediaType
         {
             get { return _media_type; }
             set { _media_type = value; OnPropertyChanged("media_type"); }
         }
         /// <summary>
-        /// 创建时间 创建时间
+        /// 创建时间 创建时间  datetime
         /// <summary>
-        [Column("create_time")]
+        [Column("create_time",IsNullable=false,DefaultValue="CURRENT_TIMESTAMP")]
         public DateTime CreateTime
         {
             get { return _create_time; }

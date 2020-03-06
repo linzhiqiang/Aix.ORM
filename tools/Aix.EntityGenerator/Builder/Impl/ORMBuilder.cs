@@ -50,14 +50,15 @@ namespace Aix.EntityGenerator.Builder
             {
                 sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
-                sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space + 4), Helper.RemoveNewLine(item.ColumnComment));
+                sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space + 4), Helper.RemoveNewLine(item.ColumnComment+$"  {item.ColumnType}"));
                 sb.AppendLine();
                 sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
 
 
-
-                sb.AppendFormat("{0}[Column(\"{1}\")]", BuilderUtils.BuildSpace(space + 4), item.ColumnName);
+                var IsNullable = item.ColumnIsNullable() ? "true" : "false";
+                var defaultValue = !string.IsNullOrEmpty(item.DefaultValue) ? $",DefaultValue=\"{item.DefaultValue}\"" : "";
+                sb.AppendFormat("{0}[Column(\"{1}\",{2}{3})]", BuilderUtils.BuildSpace(space + 4), item.ColumnName, $"IsNullable={IsNullable}", defaultValue);
                 sb.AppendLine();
 
                 if (table.PrimaryKeys.Exists(c => c.ColumnName == item.ColumnName))

@@ -7,8 +7,14 @@ namespace Aix.EntityGenerator.Entity
 {
     public class TableInfo
     {
+        /// <summary>
+        /// 表名称
+        /// </summary>
         public string TableName { get; set; }
 
+        /// <summary>
+        /// 表注释
+        /// </summary>
         public string TableComment { get; set; }
 
         private List<ColumnInfo> _columns;

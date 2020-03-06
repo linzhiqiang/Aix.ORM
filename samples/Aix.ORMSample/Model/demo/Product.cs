@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -21,9 +21,9 @@ namespace Aix.ORMSample.Entity
         private string _product_name; 
 
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("product_id")]
+        [Column("product_id",IsNullable=false)]
         [PrimaryKey]
         [Identity]
         public int ProductId
@@ -32,18 +32,18 @@ namespace Aix.ORMSample.Entity
             set { _product_id = value; OnPropertyChanged("product_id"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(255)
         /// <summary>
-        [Column("product_code")]
+        [Column("product_code",IsNullable=false)]
         public string ProductCode
         {
             get { return _product_code; }
             set { _product_code = value; OnPropertyChanged("product_code"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(255)
         /// <summary>
-        [Column("product_name")]
+        [Column("product_name",IsNullable=false)]
         public string ProductName
         {
             get { return _product_name; }

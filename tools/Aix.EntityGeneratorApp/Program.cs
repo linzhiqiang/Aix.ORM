@@ -15,6 +15,9 @@ namespace Aix.EntityGeneratorApp
     {
         static void Main(string[] args)
         {
+
+           
+
             var host = new HostBuilder()
                 .ConfigureHostConfiguration(builder =>
                 {
@@ -25,7 +28,7 @@ namespace Aix.EntityGeneratorApp
                      config.AddJsonFile("config/appsettings.json", optional: true);
                      config.AddJsonFile($"config/appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);// 覆盖前面的相同内容
 
-                  })
+                 })
                 .ConfigureLogging((context, factory) =>
                 {
                     factory.AddConsole();
@@ -41,7 +44,7 @@ namespace Aix.EntityGeneratorApp
         public static Task RunConsoleAsync(IHostBuilder hostBuilder, CancellationToken cancellationToken = default)
         {
             var host = hostBuilder.UseConsoleLifetime().Build();
-            
+
             return host.RunAsync(cancellationToken);
         }
 

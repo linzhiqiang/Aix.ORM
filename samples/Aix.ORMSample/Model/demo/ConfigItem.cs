@@ -1,6 +1,6 @@
 ﻿/*
 该文件为自动生成，不要修改。
-生成时间：2019-11-29 18:56:59。
+生成时间：2020-03-06 12:26:54。
 */
 using System;
 using System.Collections.Generic;
@@ -29,9 +29,9 @@ namespace Aix.ORMSample.Entity
         private DateTime _update_time; 
 
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("id")]
+        [Column("id",IsNullable=false)]
         [PrimaryKey]
         [Identity]
         public int Id
@@ -40,90 +40,90 @@ namespace Aix.ORMSample.Entity
             set { _id = value; OnPropertyChanged("id"); }
         }
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("group_id")]
+        [Column("group_id",IsNullable=false)]
         public int GroupId
         {
             get { return _group_id; }
             set { _group_id = value; OnPropertyChanged("group_id"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(255)
         /// <summary>
-        [Column("key")]
+        [Column("key",IsNullable=false)]
         public string Key
         {
             get { return _key; }
             set { _key = value; OnPropertyChanged("key"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(5000)
         /// <summary>
-        [Column("value")]
+        [Column("value",IsNullable=true)]
         public string Value
         {
             get { return _value; }
             set { _value = value; OnPropertyChanged("value"); }
         }
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("status")]
+        [Column("status",IsNullable=false)]
         public int Status
         {
             get { return _status; }
             set { _status = value; OnPropertyChanged("status"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(500)
         /// <summary>
-        [Column("remark")]
+        [Column("remark",IsNullable=true)]
         public string Remark
         {
             get { return _remark; }
             set { _remark = value; OnPropertyChanged("remark"); }
         }
         /// <summary>
-        /// 
+        ///   int(11)
         /// <summary>
-        [Column("sequence")]
+        [Column("sequence",IsNullable=false)]
         public int Sequence
         {
             get { return _sequence; }
             set { _sequence = value; OnPropertyChanged("sequence"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("create_user")]
+        [Column("create_user",IsNullable=false)]
         public string CreateUser
         {
             get { return _create_user; }
             set { _create_user = value; OnPropertyChanged("create_user"); }
         }
         /// <summary>
-        /// 
+        ///   datetime
         /// <summary>
-        [Column("create_time")]
+        [Column("create_time",IsNullable=false)]
         public DateTime CreateTime
         {
             get { return _create_time; }
             set { _create_time = value; OnPropertyChanged("create_time"); }
         }
         /// <summary>
-        /// 
+        ///   varchar(50)
         /// <summary>
-        [Column("update_user")]
+        [Column("update_user",IsNullable=false)]
         public string UpdateUser
         {
             get { return _update_user; }
             set { _update_user = value; OnPropertyChanged("update_user"); }
         }
         /// <summary>
-        /// 
+        ///   datetime
         /// <summary>
-        [Column("update_time")]
+        [Column("update_time",IsNullable=false)]
         public DateTime UpdateTime
         {
             get { return _update_time; }
