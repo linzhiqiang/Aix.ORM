@@ -1,7 +1,11 @@
 ﻿using Aix.EntityGenerator;
+using Aix.EntityGeneratorApp.Hosts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Aix.EntityGeneratorApp
 {
@@ -13,7 +17,7 @@ namespace Aix.EntityGeneratorApp
             services.AddEntityGenerator(option);
             services.AddHostedService<StartHostService>();
         }
-    }
 
-    
+       
+    }
 }

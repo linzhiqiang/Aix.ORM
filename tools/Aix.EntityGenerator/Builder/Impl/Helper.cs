@@ -83,14 +83,20 @@ namespace Aix.EntityGenerator.Builder
 
         public static void SaveToFile(GeneratorOptions generatorOptions, string parentDir, string fileName, string content)
         {
+            string path = GetBasePath(generatorOptions);
+            path = Path.Combine(path, parentDir);
+            BuilderUtils.CreateFile(path, fileName, content);
+        }
+
+        public static string GetBasePath(GeneratorOptions generatorOptions)
+        {
             string path = generatorOptions.EntityDirectory;
             if (string.IsNullOrEmpty(path))
             {
                 path = AppDomain.CurrentDomain.BaseDirectory;
             }
 
-            path = Path.Combine(path, parentDir);
-            BuilderUtils.CreateFile(path, fileName, content);
+            return path;
         }
     }
 }

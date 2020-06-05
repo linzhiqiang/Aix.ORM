@@ -4,20 +4,19 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aix.EntityGeneratorApp
+namespace Aix.EntityGeneratorApp.Hosts
 {
     public class StartHostService : IHostedService
     {
-         ILogger<StartHostService> _logger;
+        ILogger<StartHostService> _logger;
         GeneratorOptions _generatorOptions;
         BuilderFactory _builderFactory;
 
-        public StartHostService(ILogger<StartHostService>  logger,GeneratorOptions generatorOptions
+        public StartHostService(ILogger<StartHostService> logger, GeneratorOptions generatorOptions
             , BuilderFactory builderFactory)
         {
             _logger = logger;
@@ -80,7 +79,7 @@ namespace Aix.EntityGeneratorApp
                     {
                         builder.Builder(item.DBtype, item.ConnectionStrings);
                     }
-                    
+
                 });
                 Console.WriteLine("生成成功......");
 

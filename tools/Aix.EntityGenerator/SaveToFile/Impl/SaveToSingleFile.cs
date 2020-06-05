@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Text;
 using Aix.EntityGenerator.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Aix.EntityGenerator
 {
   public  class SaveToSingleFile:ISaveToFile
     {
+        ILogger<SaveToSingleFile> _logger;
         protected GeneratorOptions _options;
-        public SaveToSingleFile(GeneratorOptions options)
+        public SaveToSingleFile(ILogger<SaveToSingleFile> logger, GeneratorOptions options)
         {
+            _logger = logger;
             _options = options;
         }
+      
         public void Save(BuilderResult result)
         {
             StringBuilder sb = new StringBuilder();
@@ -29,6 +33,8 @@ namespace Aix.EntityGenerator
 
             var fileName = $"{result.DBName}.cs";
             Helper.SaveToFile(_options, result.DBName, fileName, sb.ToString());
+
+            _logger.LogInformation($"output directory is  {Helper.GetBasePath(_options)}");
         }
     }
 }
