@@ -15,14 +15,15 @@ namespace Aix.ORM.Repository
 {
     public partial class AbstractRepository
     {
-        public Task<long> InsertAsync(BaseEntity entity)
+        public async Task<long> InsertAsync(BaseEntity entity)
         {
             string sql = SQLBuilderHelper.GetInsertSql(entity, this.GetORMDBType());
-            return ExecuteAndTraceAsync(sql, entity, () =>
+            return await ExecuteAndTraceAsync(sql, entity, async () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.QuerySingleAsync<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                    var result = await mgr.Connection.QuerySingleAsync<long>(sql, entity, mgr.Transaction, null, CommandType.Text);
+                    return result;
                 }
             });
         }
@@ -117,13 +118,13 @@ namespace Aix.ORM.Repository
             return await ExcuteAsync(sql, null, paras);
         }
 
-        protected Task<int> ExcuteAsync(string sql, int? timeOut, object paras)
+        protected async Task<int> ExcuteAsync(string sql, int? timeOut, object paras)
         {
-            return ExecuteAndTraceAsync(sql, paras, () =>
+            return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.ExecuteAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return await mgr.Connection.ExecuteAsync(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
                 }
             });
         }
@@ -163,13 +164,13 @@ namespace Aix.ORM.Repository
             });
         }
 
-        protected Task<T> QueryFirstOrDefaultAsync<T>(string sql, int? timeOut, object paras)
+        protected async Task<T> QueryFirstOrDefaultAsync<T>(string sql, int? timeOut, object paras)
         {
-            return ExecuteAndTraceAsync(sql, paras, () =>
+            return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.QueryFirstOrDefaultAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return await mgr.Connection.QueryFirstOrDefaultAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
                 }
             });
         }
@@ -191,24 +192,24 @@ namespace Aix.ORM.Repository
             });
         }
 
-        protected Task<T> ExecuteScalarAsync<T>(string sql, int? timeOut, object paras)
+        protected async Task<T> ExecuteScalarAsync<T>(string sql, int? timeOut, object paras)
         {
-            return ExecuteAndTraceAsync(sql, paras, () =>
+            return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.ExecuteScalarAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return await mgr.Connection.ExecuteScalarAsync<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
                 }
             });
         }
 
-        protected Task<int> SPExcuteAsync(string spName, object paras)
+        protected async Task<int> SPExcuteAsync(string spName, object paras)
         {
-            return ExecuteAndTraceAsync(spName, paras, () =>
+            return await ExecuteAndTraceAsync(spName, paras, async () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.ExecuteAsync(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
+                    return await mgr.Connection.ExecuteAsync(spName, paras, mgr.Transaction, null, CommandType.StoredProcedure);
                 }
             });
         }

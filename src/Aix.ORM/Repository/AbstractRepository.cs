@@ -344,14 +344,14 @@ namespace Aix.ORM.Repository
             }
         }
 
-        private Task<T> ExecuteAndTraceAsync<T>(string sql, object param, Func<Task<T>> func)
+        private async Task<T> ExecuteAndTraceAsync<T>(string sql, object param, Func<Task<T>> func)
         {
             using (var trace = GetSqlExecuteTrace(sql, param))
             {
                 try
                 {
                     trace.ExecuteStart();
-                    return func();
+                    return await func();
                 }
                 catch (Exception ex)
                 {
