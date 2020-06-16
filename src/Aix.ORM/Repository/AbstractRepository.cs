@@ -208,16 +208,16 @@ namespace Aix.ORM.Repository
 
         protected int Excute(string sql, object paras)
         {
-            return Excute(sql, null, paras);
+            return Excute(sql, paras, null);
         }
 
-        protected int Excute(string sql, int? timeOut, object paras)
+        protected int Excute(string sql, object paras, int? commandTimeout)
         {
             return ExecuteAndTrace(sql, paras, () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.Execute(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return mgr.Connection.Execute(sql, paras, mgr.Transaction, commandTimeout, CommandType.Text);
                 }
             });
         }
@@ -225,68 +225,156 @@ namespace Aix.ORM.Repository
         protected T Get<T>(string sql, object paras)
         {
             //return Query<T>(sql, paras).FirstOrDefault();
-            return QueryFirstOrDefault<T>(sql, null, paras);
+            return QueryFirstOrDefault<T>(sql, paras);
         }
 
         protected T QueryFirstOrDefault<T>(string sql, object paras)
         {
             //return Query<T>(sql, paras).FirstOrDefault();
-            return QueryFirstOrDefault<T>(sql, null, paras);
+            return QueryFirstOrDefault<T>(sql, paras, null);
         }
+
+        /// <summary>
+        /// 根据条件查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where">userid=1 and username='admin' 或者  userid=@userid and username=@username</param>
+        /// <param name="paras">参数</param>
+        /// <returns></returns>
+        protected T GetWithWhere<T>(string where, object paras = null) where T : BaseEntity
+        {
+            string sql = BuildQuerySql<T>(where);
+            return Get<T>(sql, paras);
+        }
+
+        /// <summary>
+        /// 根据条件查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where">userid=1 and username='admin' 或者  userid=@userid and username=@username</param>
+        /// <param name="paras">参数</param>
+        /// <returns></returns>
+        protected List<T> QueryWithWhere<T>(string where, object paras = null) where T : BaseEntity
+        {
+            string sql = BuildQuerySql<T>(where);
+            return Query<T>(sql, paras);
+        }
+
+        private string BuildQuerySql<T>(string where) where T : BaseEntity
+        {
+            string sql = $"SELECT {GetAllColumns<T>() }  FROM {GetTableName<T>()} WHERE 1=1 ";
+            if (!string.IsNullOrEmpty(where))
+            {
+                if (!where.StartsWith("and", StringComparison.OrdinalIgnoreCase)) where = " AND " + where;
+                sql += where;
+            }
+
+            return sql;
+        }
+
 
         protected T ExecuteScalar<T>(string sql, object paras)
         {
-            return ExecuteScalar<T>(sql, null, paras);
+            return ExecuteScalar<T>(sql, paras, null);
         }
 
         protected List<T> Query<T>(string sql, object paras)
         {
-            return Query<T>(sql, null, paras);
+            return Query<T>(sql, paras, null);
         }
 
-        protected List<T> Query<T>(string sql, int? timeOut, object paras)
+        protected List<T> Query<T>(string sql, object paras, int? commandTimeout)
         {
             return ExecuteAndTrace(sql, paras, () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.Query<T>(sql, paras, mgr.Transaction, false, timeOut, CommandType.Text).ToList();
+                    return mgr.Connection.Query<T>(sql, paras, mgr.Transaction, false, commandTimeout, CommandType.Text).ToList();
                 }
             });
-
         }
 
-        protected T QueryFirstOrDefault<T>(string sql, int? timeOut, object paras)
+        protected List<TReturn> Query<TReturn>(string sql, Type[] types, Func<object[], TReturn> map, object paras = null, string splitOn = "Id", int? commandTimeout = null)
+        {
+            return ExecuteAndTrace(sql, paras, () =>
+            {
+                using (ConnectionManager mgr = GetConnection())
+                {
+                    return mgr.Connection.Query(sql, types, map,
+                    param: paras,
+                    transaction: mgr.Transaction,
+                    //buffered: false,
+                    splitOn: splitOn,
+                    commandTimeout: commandTimeout
+                    //commandType: CommandType.Text
+                    ).ToList();
+                }
+            });
+        }
+
+        protected List<TReturn> Query<TFirst, TSecond, TReturn>(string sql, object paras, Func<TFirst, TSecond, TReturn> map, string splitOn = "Id", int? commandTimeout = null)
+        {
+            return ExecuteAndTrace(sql, paras, () =>
+          {
+              using (ConnectionManager mgr = GetConnection())
+              {
+                  var list = mgr.Connection.Query<TFirst, TSecond, TReturn>(sql, map,
+                      paras,
+                      mgr.Transaction,
+                      commandTimeout: commandTimeout,
+                      splitOn: splitOn);
+                  return list.ToList();
+              }
+          });
+        }
+
+        protected List<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, object paras, Func<TFirst, TSecond, TThird, TReturn> map, string splitOn = "Id", int? commandTimeout = null)
+        {
+            return ExecuteAndTrace(sql, paras, () =>
+           {
+               using (ConnectionManager mgr = GetConnection())
+               {
+                   var list = mgr.Connection.Query<TFirst, TSecond, TThird, TReturn>(sql, map,
+                       paras,
+                       mgr.Transaction,
+                       commandTimeout: commandTimeout,
+                       splitOn: splitOn);
+                   return list.ToList();
+               }
+           });
+        }
+
+        protected T QueryFirstOrDefault<T>(string sql, object paras, int? commandTimeout)
         {
             return ExecuteAndTrace(sql, paras, () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
                     //https://blog.csdn.net/Day_and_Night_2017/article/details/88015637
-                    return mgr.Connection.QueryFirstOrDefault<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return mgr.Connection.QueryFirstOrDefault<T>(sql, paras, mgr.Transaction, commandTimeout, CommandType.Text);
                 }
             });
         }
 
-        protected T ExecuteScalar<T>(string sql, int? timeOut, object paras)
+        protected T ExecuteScalar<T>(string sql, object paras, int? commandTimeout)
         {
             return ExecuteAndTrace(sql, paras, () =>
             {
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    return mgr.Connection.ExecuteScalar<T>(sql, paras, mgr.Transaction, timeOut, CommandType.Text);
+                    return mgr.Connection.ExecuteScalar<T>(sql, paras, mgr.Transaction, commandTimeout, CommandType.Text);
                 }
             });
         }
 
-        protected MultipleResut2<Result1, Result2> QueryMultiple<Result1, Result2>(string sql, int? timeOut, object paras)
+        protected MultipleResut2<Result1, Result2> QueryMultiple<Result1, Result2>(string sql, object paras, int? commandTimeout)
         {
             return ExecuteAndTrace(sql, paras, () =>
             {
                 var ret = new MultipleResut2<Result1, Result2>();
                 using (ConnectionManager mgr = GetConnection())
                 {
-                    using (var multiReader = mgr.Connection.QueryMultiple(sql, paras, mgr.Transaction, timeOut, CommandType.Text))
+                    using (var multiReader = mgr.Connection.QueryMultiple(sql, paras, mgr.Transaction, commandTimeout, CommandType.Text))
                     {
                         ret.R1 = multiReader.Read<Result1>().ToList();
                         ret.R2 = multiReader.Read<Result2>().ToList();

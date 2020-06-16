@@ -47,7 +47,7 @@ namespace Aix.ORMSample.Repository
 
             string sqlOrder = " ORDER BY  id  ASC ";
 
-            return await base.PagedQueryAsync<RelicItem>(pageView, column, table, sqlCondition.ToString(), null, "id", sqlOrder);
+            return await base.PagedQueryAsync<RelicItem>(pageView, column, table, sqlCondition.ToString(), null, sqlOrder);
         }
 
 

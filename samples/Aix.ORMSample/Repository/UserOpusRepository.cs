@@ -25,7 +25,7 @@ namespace Aix.ORMSample.Repository
 
             string sqlOrder = " ORDER BY  opus_id  ASC ";
 
-            return await base.PagedQueryAsync<UserOpus>(pageView, column, table, sqlCondition.ToString(), null, "opus_id", sqlOrder);
+            return await base.PagedQueryAsync<UserOpus>(pageView, column, table, sqlCondition.ToString(), null, sqlOrder);
         }
 
         public Task<int> UpdateIsLoad(long opusId, int isLoad)

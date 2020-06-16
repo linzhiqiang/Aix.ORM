@@ -38,7 +38,7 @@ namespace Aix.ORMSample.Repository
             string sqlOrder = " ORDER BY  user_id  ASC ";
 
            
-            return await base.PagedQueryAsync<UserInfo>(pageView, column, table, sqlCondition.ToString(), param, "user_id", sqlOrder);
+            return await base.PagedQueryAsync<UserInfo>(pageView, column, table, sqlCondition.ToString(), param,  sqlOrder);
         }
 
         public async Task<List<DictInfo>> QueryDictInfoByParentCodeAsync(string parentCode)
