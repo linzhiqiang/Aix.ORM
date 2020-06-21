@@ -153,6 +153,15 @@ namespace Aix.ORM.Repository
             return this.Excute(sql, model);
         }
 
+        public int DeleteByProperty(BaseEntity model)
+        {
+            int ret = 0;
+            string sql = SQLBuilderHelper.GetDeleteSqlByChangeProperty(model, this.GetORMDBType());
+            ret = Excute(sql, model);
+            return ret;
+        }
+
+
         public int DeleteByProperty<TModel, TProperty>(Expression<Func<TModel, TProperty>> propertySelector, TModel model) where TModel : BaseEntity
         {
             var propertyNames = new List<string> {

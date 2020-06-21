@@ -74,6 +74,14 @@ namespace Aix.ORM.Repository
             return await this.ExcuteAsync(sql, model);
         }
 
+        public async Task<int> DeleteByPropertyAsync(BaseEntity model)
+        {
+            int ret = 0;
+            string sql = SQLBuilderHelper.GetDeleteSqlByChangeProperty(model, this.GetORMDBType());
+            ret = await ExcuteAsync(sql, model);
+            return ret;
+        }
+
         public Task<int> DeleteByPropertyAsync<TModel, TProperty>(Expression<Func<TModel, TProperty>> propertySelector, TModel model) where TModel : BaseEntity
         {
             var propertyNames = new List<string> {
@@ -118,7 +126,7 @@ namespace Aix.ORM.Repository
             return await ExcuteAsync(sql, paras, null);
         }
 
-        protected async Task<int> ExcuteAsync(string sql,  object paras, int? commandTimeout)
+        protected async Task<int> ExcuteAsync(string sql, object paras, int? commandTimeout)
         {
             return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
@@ -139,7 +147,7 @@ namespace Aix.ORM.Repository
 
         protected Task<T> QueryFirstOrDefaultAsync<T>(string sql, object paras)
         {
-            return QueryFirstOrDefaultAsync<T>(sql,  paras, null);
+            return QueryFirstOrDefaultAsync<T>(sql, paras, null);
         }
 
         /// <summary>
@@ -170,12 +178,12 @@ namespace Aix.ORM.Repository
 
         protected Task<T> ExecuteScalarAsync<T>(string sql, object paras)
         {
-            return ExecuteScalarAsync<T>(sql,  paras, null);
+            return ExecuteScalarAsync<T>(sql, paras, null);
         }
 
         protected async Task<List<T>> QueryAsync<T>(string sql, object paras)
         {
-            return await QueryAsync<T>(sql, paras,null);
+            return await QueryAsync<T>(sql, paras, null);
         }
 
         protected async Task<List<T>> QueryAsync<T>(string sql, object paras, int? commandTimeout)
@@ -190,7 +198,7 @@ namespace Aix.ORM.Repository
             });
         }
 
-        protected async Task<List<TReturn>> QueryAsync<TReturn>(string sql, Type[] types, Func<object[], TReturn> map, object paras = null, string splitOn = "Id",int? commandTimeout = null)
+        protected async Task<List<TReturn>> QueryAsync<TReturn>(string sql, Type[] types, Func<object[], TReturn> map, object paras = null, string splitOn = "Id", int? commandTimeout = null)
         {
             return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
@@ -267,7 +275,7 @@ namespace Aix.ORM.Repository
         }
 
 
-        protected async Task<T> QueryFirstOrDefaultAsync<T>(string sql,  object paras, int? commandTimeout)
+        protected async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object paras, int? commandTimeout)
         {
             return await ExecuteAndTraceAsync(sql, paras, async () =>
             {
@@ -278,7 +286,7 @@ namespace Aix.ORM.Repository
             });
         }
 
-        protected async Task<MultipleResut2<Result1, Result2>> QueryMultipleAsync<Result1, Result2>(string sql,object paras, int? commandTimeout)
+        protected async Task<MultipleResut2<Result1, Result2>> QueryMultipleAsync<Result1, Result2>(string sql, object paras, int? commandTimeout)
         {
             return await ExecuteAndTraceAsync(sql, paras, async () =>
             {

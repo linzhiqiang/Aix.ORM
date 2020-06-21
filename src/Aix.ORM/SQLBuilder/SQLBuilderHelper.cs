@@ -68,6 +68,12 @@ namespace Aix.ORM.SQLBuilder
             return _DeleteByPkSqlCache[type];
         }
 
+        public static string GetDeleteSqlByChangeProperty(BaseEntity model, ORMDBType dbType)
+        {
+            EntityMeta metadeta = EntityReflect.GetDefineInfoFromType(model.GetType());
+            return SQLBuilderFactory.Instance.GetSQLBuilder(dbType).BuildDeleteSqlByColumns(metadeta, model.GetPropertyChangedList());
+        }
+
         public static string GetReplaceInsertSQL(BaseEntity model, ORMDBType dbType)
         {
             Type t = model.GetType();

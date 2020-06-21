@@ -11,6 +11,11 @@ namespace Aix.ORM.SQLBuilder
             throw new NotImplementedException();
         }
 
+        public string BuildDeleteSqlByColumns(EntityMeta meta, List<string> list)
+        {
+            throw new NotImplementedException();
+        }
+
         public string BuildDeleteSqlByProperty(EntityMeta meta, List<string> propertyNames)
         {
             throw new NotImplementedException();

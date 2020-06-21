@@ -231,7 +231,7 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" WHERE 1=1 ");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND `{0}`=@{1}",item.ColumnName, item.PropertyName);
+                    sqlbuilder.AppendFormat(" AND `{0}`=@{1}", item.ColumnName, item.PropertyName);
                 }
             }
 
@@ -251,8 +251,31 @@ namespace Aix.ORM.SQLBuilder
                 sqlbuilder.Append(" 1=1");
                 foreach (var item in pkList)
                 {
-                    sqlbuilder.AppendFormat(" AND `{0}`=@{1}", item.ColumnName,item.PropertyName);
+                    sqlbuilder.AppendFormat(" AND `{0}`=@{1}", item.ColumnName, item.PropertyName);
                 }
+            }
+
+            return sqlbuilder.ToString();
+        }
+
+        /// <summary>
+        /// 通过指定列删除
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="list">指定那些列</param>
+        /// <returns></returns>
+        public string BuildDeleteSqlByColumns(EntityMeta meta, List<string> list)
+        {
+            AssertUtils.IsTrue(list != null && list.Count > 0, "删除没有指定列");
+
+            StringBuilder sqlbuilder = new StringBuilder();
+            sqlbuilder.AppendFormat("DELETE FROM [{0}] WHERE 1=1 ", meta.TableName);
+            var columns = meta.Columns.Where(x => list.Contains(x.ColumnName)).ToList();
+            AssertUtils.IsTrue(columns != null && columns.Count > 0 && list.Count == columns.Count, "删除没有指定列或列不匹配");
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                sqlbuilder.AppendFormat(" AND `{0}`=@{1}", columns[i].ColumnName, columns[i].PropertyName);
             }
 
             return sqlbuilder.ToString();
@@ -273,7 +296,7 @@ namespace Aix.ORM.SQLBuilder
             return sqlbuilder.ToString();
         }
 
-        public string GetAllColumns(EntityMeta meta,string prefix)
+        public string GetAllColumns(EntityMeta meta, string prefix)
         {
             prefix = prefix ?? "";
             if (!string.IsNullOrEmpty(prefix))

@@ -42,6 +42,14 @@ namespace Aix.ORM.SQLBuilder
         string BuildDeleteByPkSql(EntityMeta meta);
 
         /// <summary>
+        /// 通过制定列删除
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="list">指定那些列</param>
+        /// <returns></returns>
+        string BuildDeleteSqlByColumns(EntityMeta meta, List<string> list);
+
+        /// <summary>
         /// mysql 专有的
         /// </summary>
         /// <param name="meta"></param>
