@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aix.ORM.DBConnectionManager
 {
@@ -37,6 +38,9 @@ namespace Aix.ORM.DBConnectionManager
                 return _transaction;
             }
         }
+
+        private List<Func<Task>> TransactionCommitCallbacks = new List<Func<Task>>();
+
         #endregion
 
         #region 静态方法
@@ -84,7 +88,31 @@ namespace Aix.ORM.DBConnectionManager
         {
             return Transaction != null;
         }
+
+        #region 事务完成回调
+
+        public void AddTransactionCommitCallback(Func<Task> func)
+        {
+            if (func != null)
+            {
+                TransactionCommitCallbacks.Add(func);
+            }
+        }
+
+        public async Task ExecuteTransactionCommitCallback()
+        {
+            foreach (var func in TransactionCommitCallbacks)
+            {
+                await func.Invoke();
+            }
+
+            TransactionCommitCallbacks.Clear();
+        }
+
         #endregion
+
+        #endregion
+
 
         #region  计数器
 

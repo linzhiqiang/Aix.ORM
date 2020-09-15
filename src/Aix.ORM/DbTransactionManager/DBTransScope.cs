@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aix.ORM.DbTransactionManager
 {
@@ -36,11 +37,11 @@ namespace Aix.ORM.DbTransactionManager
         private bool _beginTransactionIsInCurrentTransScope = false;
         private bool _completed = false;
 
-        public DBTransScope(string connectionStrings, ORMDBType dbTyp) : this(connectionStrings, dbTyp,TransScopeOption.Required)
+        public DBTransScope(string connectionStrings, ORMDBType dbTyp) : this(connectionStrings, dbTyp, TransScopeOption.Required)
         {
         }
 
-        public DBTransScope(string connectionStrings, ORMDBType dbTyp,TransScopeOption option)
+        public DBTransScope(string connectionStrings, ORMDBType dbTyp, TransScopeOption option)
         {
             //如果有多数据库，再开放个构造函数 传递数据库连接字符串
             _connectionManager = ConnectionManager.GetManager(connectionStrings, dbTyp);
@@ -54,7 +55,7 @@ namespace Aix.ORM.DbTransactionManager
                 _tran = _connectionManager.Transaction;
             }
         }
-       
+
         /// <summary>
         /// 提交事务
         /// </summary>
@@ -64,8 +65,33 @@ namespace Aix.ORM.DbTransactionManager
             {
                 _tran.Commit();
                 _completed = true;
+
+
             }
         }
+
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        /// <param name="func">事务提交时 执行的任务</param>
+        public void  Commit(Func<Task> func)
+        {
+            _connectionManager.AddTransactionCommitCallback(func);
+            this.Commit();
+        }
+
+        /// <summary>
+        /// 执行回调
+        /// </summary>
+        /// <returns></returns>
+        public async Task ExecuteTransactionCommitCallback()
+        {
+            if (_completed)
+            {
+                await _connectionManager.ExecuteTransactionCommitCallback();
+            }
+        }
+
         /// <summary>
         /// 回滚事务
         /// </summary>
