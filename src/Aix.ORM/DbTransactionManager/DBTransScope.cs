@@ -20,6 +20,12 @@ namespace Aix.ORM.DbTransactionManager
         void Commit();
 
         /// <summary>
+        /// 提交事务 事务完成时回调
+        /// </summary>
+        /// <param name="action"></param>
+        void Commit(Action action);
+
+        /// <summary>
         /// 回滚事务 使用using时未提交或者提交出错会自动回滚，无需手动调用改方法；未使用using时需自行调用改方法
         /// </summary>
         void Rollback();
@@ -66,7 +72,7 @@ namespace Aix.ORM.DbTransactionManager
                 _tran.Commit();
                 _completed = true;
 
-
+                ExecuteTransactionCommitCallback();
             }
         }
 
@@ -74,21 +80,29 @@ namespace Aix.ORM.DbTransactionManager
         /// 提交事务
         /// </summary>
         /// <param name="func">事务提交时 执行的任务</param>
-        public void  Commit(Func<Task> func)
+        public void Commit(Action action)
         {
-            _connectionManager.AddTransactionCommitCallback(func);
+            AddTransactionCommitCallback(action);
             this.Commit();
+        }
+
+        private void AddTransactionCommitCallback(Action action)
+        {
+            if (action != null)
+            {
+                _connectionManager.AddTransactionCommitCallback(action);
+            }
         }
 
         /// <summary>
         /// 执行回调
         /// </summary>
         /// <returns></returns>
-        public async Task ExecuteTransactionCommitCallback()
+        private void ExecuteTransactionCommitCallback()
         {
             if (_completed)
             {
-                await _connectionManager.ExecuteTransactionCommitCallback();
+                _connectionManager.ExecuteTransactionCommitCallback();
             }
         }
 

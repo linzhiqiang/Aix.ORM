@@ -39,7 +39,7 @@ namespace Aix.ORM.DBConnectionManager
             }
         }
 
-        private List<Func<Task>> TransactionCommitCallbacks = new List<Func<Task>>();
+        private List<Action> TransactionCommitCallbacks = new List<Action>();
 
         #endregion
 
@@ -91,22 +91,40 @@ namespace Aix.ORM.DBConnectionManager
 
         #region 事务完成回调
 
-        public void AddTransactionCommitCallback(Func<Task> func)
+        public void AddTransactionCommitCallback(Action action)
         {
-            if (func != null)
+            if (action != null)
             {
-                TransactionCommitCallbacks.Add(func);
+                TransactionCommitCallbacks.Add(action);
             }
         }
 
-        public async Task ExecuteTransactionCommitCallback()
+        public void  ExecuteTransactionCommitCallback()
         {
-            foreach (var func in TransactionCommitCallbacks)
+            List<Exception> exceptions = new List<Exception>();
+            try
             {
-                await func.Invoke();
+                foreach (var action in TransactionCommitCallbacks)
+                {
+                    try
+                    {
+                        action.Invoke();
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Add(ex);
+                    }
+                }
+            }
+            finally
+            {
+                TransactionCommitCallbacks.Clear();
             }
 
-            TransactionCommitCallbacks.Clear();
+            if (exceptions.Count > 0)
+            {
+                throw exceptions.First();
+            }
         }
 
         #endregion
