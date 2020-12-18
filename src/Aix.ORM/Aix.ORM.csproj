@@ -5,8 +5,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/linzhiqiang/Aix.ORM.git</RepositoryUrl>
     <Description>封装dapper的ORM框架</Description>
-    <Version>1.0.6</Version>
-    <PackageReleaseNotes>事务提交时 增加回调，修改为standard2.0</PackageReleaseNotes>
+    <Version>1.0.7</Version>
+    <PackageReleaseNotes>事务提交时 增加回调，修改为standard2.0,增加公共接口</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

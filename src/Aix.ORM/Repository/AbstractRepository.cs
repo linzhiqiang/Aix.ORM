@@ -14,7 +14,7 @@ using System.Linq.Expressions;
 
 namespace Aix.ORM.Repository
 {
-    public abstract partial class AbstractRepository
+    public abstract partial class AbstractRepository: IRepository
     {
         /// <summary>
         /// 数据库连接
