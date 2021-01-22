@@ -31,12 +31,19 @@ namespace Aix.EntityGenerator.Builder
             var metadatas = _dBMetadataWrapper.GetTableInfo(dbType, connectionStrings);
 
             List<ClassBuilderInfo> classInfos = new List<ClassBuilderInfo>();
-            foreach (var item in metadatas.TableInfos)
+            int maxTableNameLength = metadatas.TableInfos.Max(x=>x.TableName.Length)+ "生成表:  ".Length;
+            foreach (var item in metadatas.TableInfos.OrderBy(x=>x.TableName))
             {
-                _logger.LogInformation("开始生成表：{0}......", item.TableName);
+              
+                Console.ForegroundColor = ConsoleColor.Green;
+                var message = $"生成表:  {item.TableName}";
+                //Console.Write(message.PadRight(100-message.Length,'.'));
+                Console.Write(String.Format($"{{0,-{maxTableNameLength+1}}}", message));
                 var classString = BuildClass(dbType, item);
                 classInfos.Add(new ClassBuilderInfo { ClassString = classString, TableInfo = item });
-                _logger.LogInformation("......成功");
+                Console.Write("成功".PadLeft(20,'.'));
+                Console.WriteLine();
+                Console.ResetColor();
             }
             var result = new BuilderResult
             {

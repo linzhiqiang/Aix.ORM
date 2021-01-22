@@ -15,7 +15,8 @@ namespace Aix.EntityGeneratorApp
         {
             var option = context.Configuration.GetSection("generator").Get<GeneratorOptions>();
             services.AddEntityGenerator(option);
-            services.AddHostedService<StartHostService>();
+            //services.AddHostedService<StartHostService>();
+            services.AddHostedService<StartHostService2>();
         }
 
        

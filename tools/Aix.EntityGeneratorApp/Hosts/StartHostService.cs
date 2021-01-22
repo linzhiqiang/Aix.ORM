@@ -73,6 +73,7 @@ namespace Aix.EntityGeneratorApp.Hosts
                     continue;
                 }
                 Console.WriteLine("开始生成......");
+                Console.WriteLine();
                 WithException(() =>
                 {
                     foreach (var item in _generatorOptions.Databases)
@@ -81,10 +82,13 @@ namespace Aix.EntityGeneratorApp.Hosts
                     }
 
                 });
+                Console.WriteLine();
                 Console.WriteLine("生成成功......");
 
                 Console.WriteLine();
                 Console.WriteLine();
+
+               
             }
         }
 

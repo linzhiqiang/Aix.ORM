@@ -34,7 +34,10 @@ namespace Aix.EntityGenerator
             var fileName = $"{result.DBName}.cs";
             Helper.SaveToFile(_options, result.DBName, fileName, sb.ToString());
 
-            _logger.LogInformation($"output directory is  {Helper.GetBasePath(_options)}");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            //_logger.LogInformation($"output directory is  {Helper.GetBasePath(_options)}");
+            Console.WriteLine($"output directory is  {Helper.GetBasePath(_options)}");
+            Console.ResetColor();
         }
     }
 }
