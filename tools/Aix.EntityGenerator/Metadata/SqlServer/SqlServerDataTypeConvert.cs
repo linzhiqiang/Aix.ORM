@@ -23,7 +23,7 @@ namespace Aix.EntityGenerator.Metadata
                     dataType = "short";
                     break;
                 case "tinyint":
-                    dataType = "byte";
+                    dataType = "sbyte";
                     break;
                 case "decimal":
                 case "float":
