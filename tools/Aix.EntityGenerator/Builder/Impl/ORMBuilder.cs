@@ -24,7 +24,7 @@ namespace Aix.EntityGenerator.Builder
             sb.AppendLine();
             sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space), Helper.RemoveNewLine(table.TableComment));
             sb.AppendLine();
-            sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space));
+            sb.AppendFormat("{0}/// </summary>", BuilderUtils.BuildSpace(space));
             sb.AppendLine();
 
             //class 类名
@@ -52,7 +52,7 @@ namespace Aix.EntityGenerator.Builder
                 sb.AppendLine();
                 sb.AppendFormat("{0}/// {1}", BuilderUtils.BuildSpace(space + 4), Helper.RemoveNewLine(item.ColumnComment+$"  {item.ColumnType}"));
                 sb.AppendLine();
-                sb.AppendFormat("{0}/// <summary>", BuilderUtils.BuildSpace(space + 4));
+                sb.AppendFormat("{0}/// </summary>", BuilderUtils.BuildSpace(space + 4));
                 sb.AppendLine();
 
 
